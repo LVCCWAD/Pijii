@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('access_level', ['viewer', 'commenter', 'editor'])->default('commenter');
             $table->foreignId('granted_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('granted_at')->nullable();
+            $table->unique(['task_id', 'email']);
             $table->timestamps();
         });        
     }

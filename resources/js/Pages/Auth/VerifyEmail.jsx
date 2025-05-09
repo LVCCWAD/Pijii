@@ -9,7 +9,7 @@ function VerifyEmail() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('verification.send')); 
+        post('/email/verification-notification'); 
     };
 
     return (

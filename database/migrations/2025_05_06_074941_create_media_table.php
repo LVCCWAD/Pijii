@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('media', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained()->onDelete('cascade');
-            $table->string('file_name');
-            $table->string('file_path');
-            $table->string('mime_type');
+            $table->string('file_name', 255);
+            $table->string('file_path', 255);
+            $table->string('mime_type', 255);
             $table->integer('size');
             $table->timestamps();
-        });        
+        });
     }
 
     /**

@@ -2,19 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Task;
-use App\Models\Project;
-use App\Models\Category;
 use App\Models\User;
 use App\Models\Media;
+use App\Models\Stage;
+use App\Models\Project;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     public function showTasks()
     {
-        $tasks = Task::with(['project', 'category', 'createdBy', 'media', 'taskCollaborators'])->get();
-        return view('tasks', ['tasks' => $tasks]);
+        $tasks = Task::with(['project', 'category', 'createdBy', 'media', 'taskCollaborators'])
+            ->where('created_by', Auth::id())
+            ->orderBy('scheduled_at')
+            ->get();
+
+        return view('tasks.index', ['tasks' => $tasks]);
+    }
+
+    public function show($taskId)
+    {
+        $task = Task::with([
+            'project.stage',
+            'stage',
+            'category',
+            'createdBy',
+            'project.parent',   
+        ])->findOrFail($taskId);
+
+        $ancestors = [];
+        $current = $task->project ? $task->project->parent : null;
+
+        while ($current) {
+            $ancestors[] = $current;
+            $current = $current->parent;
+        }
+
+        $ancestors = array_reverse($ancestors);
+        $categories = Category::all();
+
+        return view('tasks.show', compact('task', 'ancestors', 'categories'));
     }
 
 
@@ -23,49 +53,44 @@ class TaskController extends Controller
         $projects = Project::all();
         $categories = Category::all();
         $users = User::all();
-        return view('task-create', compact('projects', 'categories', 'users'));
+        $stages = Stage::all();
+
+        return view('tasks.create', compact('projects', 'categories', 'users', 'stages'));
     }
-
-
-    public function edit(Task $task)
-    {
-        $projects = Project::all();
-        $categories = Category::all();
-        $users = User::all();
-        return view('task-edit', compact('task', 'projects', 'categories', 'users'));
-    }
-
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'project_id' => 'nullable|exists:projects,id',
-            'category_id' => 'nullable|exists:categories,id',
-            'stage' => 'required|in:to_do,in_progress,completed,on_hold',
+            'project_id' => 'required|exists:projects,id',
+            'stage_id' => 'required|exists:stages,id',
             'priority_level' => 'required|in:low,medium,high',
             'scheduled_at' => 'nullable|date',
             'is_collaborative' => 'nullable|boolean',
-            'created_by' => 'required|exists:users,id',
         ]);
 
         Task::create([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
-            'project_id' => $validated['project_id'] ?? null,
-            'category_id' => $validated['category_id'] ?? null,
-            'stage' => $validated['stage'],
+            'project_id' => $validated['project_id'],
+            'stage_id' => $validated['stage_id'],
             'priority_level' => $validated['priority_level'],
-            'scheduled_at' => $validated['scheduled_at'] ? \Carbon\Carbon::parse($validated['scheduled_at']) : null,
-            'is_collaborative' => $validated['is_collaborative'] ?? null,
-            'created_by' => $validated['created_by'],
-            'created_at' => now(),
+            'scheduled_at' => isset($validated['scheduled_at']) ? \Carbon\Carbon::parse($validated['scheduled_at']) : null,
+            'is_collaborative' => $request->boolean('is_collaborative'),
+            'created_by' => Auth::id(),
         ]);
 
         return redirect()->route('showTasks')->with('success', 'Task created successfully.');
     }
 
+    public function edit(Task $task)
+    {
+        $projects = Project::all();
+        $categories = Category::all();
+        $users = User::all();
+        return view('tasks.edit', compact('task', 'projects', 'categories', 'users'));
+    }
 
     public function update(Request $request, Task $task)
     {
@@ -73,29 +98,24 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'project_id' => 'nullable|exists:projects,id',
-            'category_id' => 'nullable|exists:categories,id',
             'stage' => 'required|in:to_do,in_progress,completed,on_hold',
             'priority_level' => 'required|in:low,medium,high',
             'scheduled_at' => 'nullable|date',
             'is_collaborative' => 'nullable|boolean',
-            'created_by' => 'required|exists:users,id',
         ]);
 
         $task->update([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'project_id' => $validated['project_id'] ?? null,
-            'category_id' => $validated['category_id'] ?? null,
             'stage' => $validated['stage'],
             'priority_level' => $validated['priority_level'],
             'scheduled_at' => $validated['scheduled_at'] ? \Carbon\Carbon::parse($validated['scheduled_at']) : null,
-            'is_collaborative' => $validated['is_collaborative'] ?? null,
-            'created_by' => $validated['created_by'],
+            'is_collaborative' => $request->boolean('is_collaborative'),
         ]);
 
         return redirect()->route('showTasks')->with('success', 'Task updated successfully.');
     }
-
 
     public function delete(Task $task)
     {
@@ -103,41 +123,40 @@ class TaskController extends Controller
         return redirect()->route('showTasks')->with('success', 'Task deleted successfully.');
     }
 
+    // public function addMedia(Task $task, Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'media_file' => 'required|file|mimes:jpeg,png,jpg,pdf,docx,txt|max:10240',
+    //     ]);
 
-    public function addMedia(Task $task, Request $request)
-    {
-        $validated = $request->validate([
-            'media_file' => 'required|file|mimes:jpeg,png,jpg,pdf,docx,txt|max:10240',
-        ]);
+    //     $mediaPath = $request->file('media_file')->store('task_media');
 
-        $mediaPath = $request->file('media_file')->store('task_media');
+    //     $media = new Media([
+    //         'file_path' => $mediaPath,
+    //         'task_id' => $task->id,
+    //     ]);
 
-        $media = new Media([
-            'file_path' => $mediaPath,
-            'task_id' => $task->id,
-        ]);
+    //     $media->save();
 
-        $media->save();
-
-        return redirect()->route('showTasks')->with('success', 'Media added to task.');
-    }
+    //     return redirect()->route('showTasks')->with('success', 'Media added to task.');
+    // }
 
 
-    public function addCollaborator(Task $task, Request $request)
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-        ]);
+    // public function addCollaborator(Task $task, Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'user_id' => 'required|exists:users,id',
+    //     ]);
 
-        $task->taskCollaborators()->attach($validated['user_id']);
+    //     $task->taskCollaborators()->attach($validated['user_id']);
 
-        return redirect()->route('showTasks')->with('success', 'Collaborator added to task.');
-    }
+    //     return redirect()->route('showTasks')->with('success', 'Collaborator added to task.');
+    // }
 
-    public function removeCollaborator(Task $task, User $user)
-    {
-        $task->taskCollaborators()->detach($user->id);
+    // public function removeCollaborator(Task $task, User $user)
+    // {
+    //     $task->taskCollaborators()->detach($user->id);
 
-        return redirect()->route('showTasks')->with('success', 'Collaborator removed from task.');
-    }
+    //     return redirect()->route('showTasks')->with('success', 'Collaborator removed from task.');
+    // }
 }

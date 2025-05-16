@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('entity_type');
             $table->unsignedBigInteger('entity_id');
-            $table->string('action');
+            $table->string('action', 255);
             $table->timestamps();
-        });        
+        });
     }
 
     /**

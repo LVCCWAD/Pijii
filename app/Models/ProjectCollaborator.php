@@ -21,16 +21,16 @@ class ProjectCollaborator extends Model
 
     public function project(): BelongsTo
     {
-        return $this->belongsTo(Project::class, 'project_id', 'project_id');
+        return $this->belongsTo(Project::class);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->belongsTo(User::class);
     }
-
+    
     public function grantedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'granted_by', 'user_id');
+        return $this->belongsTo(User::class, 'granted_by');
     }
 }

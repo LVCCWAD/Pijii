@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('email');
-            $table->enum('access_level', ['viewer', 'commenter', 'editor'])->default('commenter');
+            $table->string('email', 255);
+            $table->enum('access_level', ['viewer', 'commenter', 'editor'])->default('viewer');
             $table->foreignId('granted_by')->constrained('users')->onDelete('cascade');
             $table->timestamp('granted_at')->useCurrent();
             $table->unique(['project_id', 'email']);

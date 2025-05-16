@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('parent_id')->nullable()->constrained('projects')->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->foreignId('stage_id')->constrained()->onDelete('cascade');
-            $table->string('project_name');
+            $table->string('project_name', 255);
             $table->enum('priority_level', ['low', 'medium', 'high'])->default('medium');
             $table->timestamp('scheduled_at')->nullable();
             $table->boolean('is_collaborative')->default(false);

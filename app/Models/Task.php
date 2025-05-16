@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -14,11 +15,11 @@ class Task extends Model
     protected $fillable = [
         'title',
         'description',
-        'stage',
+        'stage_id',
         'project_id',
         'category_id',
         'priority_level',
-        'schedules_at',
+        'scheduled_at',
         'created_by',
     ];
 
@@ -61,16 +62,13 @@ class Task extends Model
         return $this->hasMany(TaskReminder::class);
     }
 
-    public function logs(): HasMany
+    public function logs(): MorphMany
     {
-        return $this->hasMany(Log::class);
+        return $this->morphMany(Log::class, 'entity');
     }
-
-    public function taskCollaborators(): BelongsToMany
+    
+    public function taskCollaborators(): HasMany
     {
-        return $this->belongsToMany(User::class, 'task_collaborators', 'task_id', 'user_id')
-                    ->withPivot('access_level', 'granted_by', 'granted_at')
-                    ->withTimestamps();
+        return $this->hasMany(TaskCollaborator::class);
     }
-
 }

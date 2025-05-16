@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->string('email');
+            $table->string('email', 255);
             $table->enum('access_level', ['viewer', 'commenter', 'editor'])->default('commenter');
             $table->foreignId('granted_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('granted_at')->nullable();

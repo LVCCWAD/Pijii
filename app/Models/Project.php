@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Project extends Model
@@ -26,12 +27,12 @@ class Project extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'category_id', 'category_id');
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     public function stage(): BelongsTo
     {
-        return $this->belongsTo(Stage::class, 'stage_id', 'stage_id');
+        return $this->belongsTo(Stage::class, 'stage_id', 'id');
     }
 
     public function createdBy(): BelongsTo
@@ -41,18 +42,26 @@ class Project extends Model
 
     public function tasks(): HasMany
     {
-        return $this->hasMany(Task::class, 'project_id', 'project_id');
+        return $this->hasMany(Task::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Project::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Project::class, 'parent_id');
     }
 
     public function projectCollaborators(): HasMany
     {
-        return $this->hasMany(ProjectCollaborator::class, 'project_id', 'project_id');
+        return $this->hasMany(ProjectCollaborator::class);
     }
 
-    public function collaborators(): BelongsToMany
+    public function logs(): MorphMany
     {
-        return $this->belongsToMany(User::class, 'project_collaborators', 'project_id', 'user_id')
-                    ->withPivot('access_level', 'granted_by', 'granted_at')
-                    ->withTimestamps();
+        return $this->morphMany(Log::class, 'entity');
     }
 }

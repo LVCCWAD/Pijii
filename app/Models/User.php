@@ -54,6 +54,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Comment::class);
     }
 
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'created_by');
+    }
 
     public function notifications(): HasMany
     {
@@ -70,17 +84,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Log::class);
     }
 
-    public function taskCollaborations(): BelongsToMany
+   public function taskCollaborations(): HasMany
     {
-        return $this->belongsToMany(Task::class, 'task_collaborators', 'user_id', 'task_id')
-                    ->withPivot('access_level', 'granted_by', 'granted_at')
-                    ->withTimestamps();
+        return $this->hasMany(TaskCollaborator::class, 'user_id');
+    }
+    public function grantedTaskCollaborations(): HasMany
+    {
+        return $this->hasMany(TaskCollaborator::class, 'granted_by');
     }
 
-    public function projectCollaborations(): BelongsToMany
+    public function projectCollaborations(): HasMany 
     {
-        return $this->belongsToMany(Project::class, 'project_collaborators', 'user_id', 'project_id')
-                    ->withPivot('access_level', 'granted_by', 'granted_at')
-                    ->withTimestamps();
+        return $this->hasMany(ProjectCollaborator::class, 'user_id');
+    }
+
+    public function grantedProjectCollaborations(): HasMany 
+    {
+        return $this->hasMany(ProjectCollaborator::class, 'granted_by');
     }
 }

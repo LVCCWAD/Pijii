@@ -13,11 +13,11 @@ class Stage extends Model
 
     public function tasks(): HasMany
     {
-        return $this->hasMany(Task::class, 'stage_id', 'stage_id');
+        return $this->hasMany(Task::class);
     }
 
     public function projects(): HasMany
     {
-        return $this->hasMany(Project::class, 'stage_id', 'stage_id');
+        return $this->hasMany(Project::class);
     }
 }

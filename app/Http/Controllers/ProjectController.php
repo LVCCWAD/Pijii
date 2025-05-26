@@ -61,15 +61,9 @@ class ProjectController extends Controller
             'parent'
         ])->findOrFail($projectId);
         
-        $ancestors = [];
-        $current = $project->parent;
+        $getAncestors = app('get_project_ancestors');
+        $ancestors = $getAncestors($project->parent);
 
-        while ($current) {
-        $ancestors[] = $current;
-        $current = $current->parent;
-        }
-
-        $ancestors = array_reverse($ancestors);
         $categories = Category::all();
 
         return view('projects.show', compact('project', 'ancestors', 'categories'));

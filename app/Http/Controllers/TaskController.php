@@ -33,15 +33,9 @@ class TaskController extends Controller
             'project.parent',   
         ])->findOrFail($taskId);
 
-        $ancestors = [];
-        $current = $task->project ? $task->project->parent : null;
-
-        while ($current) {
-            $ancestors[] = $current;
-            $current = $current->parent;
-        }
-
-        $ancestors = array_reverse($ancestors);
+        $getAncestors = app('get_project_ancestors');
+        $ancestors = $getAncestors($task->project?->parent);
+        
         $categories = Category::all();
 
         return view('tasks.show', compact('task', 'ancestors', 'categories'));

@@ -9,7 +9,9 @@ use App\Models\Stage;
 use App\Models\Project;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\TaskCollaborator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -140,9 +142,29 @@ class TaskController extends Controller
     // {
     //     $validated = $request->validate([
     //         'user_id' => 'required|exists:users,id',
+    //         'access_level' => 'required|in:viewer,commenter,editor',
     //     ]);
 
-    //     $task->taskCollaborators()->attach($validated['user_id']);
+    //     $userToAdd = User::findOrFail($validated['user_id']);
+    //     $project = $task->project;
+
+    //     if (!Gate::allows('can-be-task-collaborator', [$userToAdd, $project])) {
+    //         return redirect()->back()->withErrors([
+    //             'user_id' => 'This user is not a collaborator on the associated project.'
+    //         ]);
+    //     }
+
+    //     TaskCollaborator::updateOrCreate(
+    //         [
+    //             'task_id' => $task->id,
+    //             'user_id' => $userToAdd->id,
+    //         ],
+    //         [
+    //             'access_level' => $validated['access_level'],
+    //             'granted_by' => Auth::id(),
+    //             'granted_at' => now(),
+    //         ]
+    //     );
 
     //     return redirect()->route('showTasks')->with('success', 'Collaborator added to task.');
     // }

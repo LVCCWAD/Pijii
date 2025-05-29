@@ -1,0 +1,55 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(189, 217, 198 );
+  padding: 20px 1rem 0px 1rem;
+  border-bottom: 1px solid rgb(189, 217, 198 );
+}
+
+.header-left,
+.header-middle,
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 0 10px;
+  height: 4rem;
+  width: 29rem;
+  border: 1px solid #e6eaee;
+  background-color: rgb(158, 199, 171);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.date-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.notification {
+  margin-top: 20px;
+  font-size: 1.25rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-pic {
+  width: 70px;
+  height: 70px;
+  border-radius: 9999px;
+}
+
+.profile-name {
+  font-weight: 600;
+  color: #1e293b;
+}

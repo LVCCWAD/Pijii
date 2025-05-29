@@ -1,0 +1,90 @@
+/* ---------------------------------- */
+/*            TASK CARD               */
+/* ---------------------------------- */
+
+.piji-card {
+  max-width: 24rem; /* same as max-w-sm */
+  width: 100%;
+  background-color: white;
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+  overflow: hidden;
+  border: 1px solid #e5e7eb; /* same as Tailwind 'border' */
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+}
+
+.card-top {
+  background-color: #0369a1; /* sky-700  should be interchangable*/ 
+  padding: 1rem;
+  color: white;
+  position: relative;
+
+}
+
+.top-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.label {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* medium */
+}
+
+.priority {
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  background-color: #fb923c; /* orange-400 */
+  border: 1px solid #fca5a5; /* red-300 */
+  color: white;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.status {
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  background-color: #fee2e2; /* red-100 */
+  color: #dc2626; /* red-600 */
+  border: 1px solid #fca5a5; /* red-300 */
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.card-content {
+  padding: 1rem;
+  border-radius: 9999px;
+
+}
+
+.date {
+  font-size: 0.75rem;
+  color: #6b7280; /* gray-500 */
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #374151; /* gray-700 */
+  margin-bottom: 0.5rem;
+}
+
+.meta {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.meta .bold {
+  font-weight: 600;
+}

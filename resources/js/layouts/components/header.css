@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: rgb(189, 217, 198 );
-  padding: 20px 1rem 0px 1rem;
+  padding: 10px 1rem 0px 1rem;
   border-bottom: 1px solid rgb(189, 217, 198 );
 }
 
@@ -16,7 +16,7 @@
 
 .search-input {
   padding: 0 10px;
-  height: 4rem;
+  height: 3rem;
   width: 29rem;
   border: 1px solid #e6eaee;
   background-color: rgb(158, 199, 171);

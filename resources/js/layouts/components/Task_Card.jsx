@@ -39,9 +39,6 @@ export default function PijiCard() {
             <p>Time Created - 3:20 PM</p>
             <p>Latest Edit - 5:13 PM</p>
           </div>
-       
-
-
         </div>
       </div>
     </div>

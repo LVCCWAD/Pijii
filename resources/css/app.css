@@ -30,18 +30,33 @@
   background-color: rgb(189, 217, 198 ); 
 }
 
+.piji-gradient {
+    background: linear-gradient(to bottom right, #fef3c7, #eff6ff, #d1fae5); 
+
+}
+
 .piji-brown {
   background-color: rgb(228, 202, 165); 
 }
 
 /* color palette   */
-
-header {
-  background-color: #b81212;
-  padding: 1rem;
+.main-bg {
+  height: 100vh;
+  margin: 0;
+  animation: gradientShift 10s ease infinite;
+  background: linear-gradient(-45deg, #fef3c7, #eff6ff, #d1fae5, #fef3c7);
+  background-size: 300% 300%;
 }
 
-.header-content {
-    background-color: #b81212;
-
+/* Animate the background gradient */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }

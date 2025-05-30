@@ -1,13 +1,13 @@
-import {NavbarMinimalColored} from "../../layouts/mantine/sidebar.jsx";
-import PijiHeader from "../../layouts/components/Header.jsx";
-import PijiHeader2 from "../../layouts/components/Header2.jsx";
+import {NavbarMinimalColored} from "../layouts/mantine/sidebar.jsx";
+import PijiHeader from "../layouts/components/Header.jsx";
+import PijiHeader2 from "../layouts/components/Header2.jsx";
 import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers} from '@tabler/icons-react'
 import { Link } from '@inertiajs/react';
 
 
 
 
-export default function Edit_Profile() {
+export default function Projects() {
   return (
     <div class="piji-green">
     <div className="flex flex-row w-full">
@@ -15,7 +15,7 @@ export default function Edit_Profile() {
 
         <div class="flex flex-col w-full" >
             <PijiHeader/> 
-            <PijiHeader2 title="Edit_Profile"/>
+            <PijiHeader2 title="Archived"/>
 
                 {/* might as well gawing component na tong part */}
     
@@ -28,4 +28,4 @@ export default function Edit_Profile() {
   );
 }
 
-Edit_Profile.layout = (page) => page;
+Projects.layout = (page) => page;

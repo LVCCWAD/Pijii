@@ -2,6 +2,7 @@ import React from 'react';
 import './header.css';
 import { IconZoom, IconBell } from '@tabler/icons-react';
 import { Link } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 
 
 export default function PijiHeader() {
@@ -11,6 +12,8 @@ export default function PijiHeader() {
     day: 'numeric',
     year: 'numeric',
   });
+
+  const { user } = usePage().props;
 
   return (
     <header className="app-header">
@@ -30,19 +33,21 @@ export default function PijiHeader() {
       <div className="header-right" style={{margin:"0 90px 0 0"}}>
         
         <div className="notification">
-          <Link>< IconBell size={29}/> </Link>
+          <Link href={""}>< IconBell size={29}/> </Link>
         </div>
-        <div className="profile">
+
+        <Link className="profile" href={"/profile"}>
           <img
             src="https://i.pravatar.cc/40"
             alt="Profile"
             className="profile-pic"
           />
           <div>
-            <span className="profile-name">John Doe</span>
+            <span className="profile-name">{user.name}</span>
             <p className="font-md">Student</p>
           </div>
-        </div>
+        </Link>
+
       </div>
     </header>
   );

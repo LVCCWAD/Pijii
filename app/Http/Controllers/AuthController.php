@@ -76,7 +76,9 @@ class AuthController extends Controller
 
     public function showDashboardPage()
     {
-        return inertia('Dashboard');
+        return Inertia::render('Dashboard', [
+        'user' => Auth::user(),
+    ]);
     }
 
     public function logout()

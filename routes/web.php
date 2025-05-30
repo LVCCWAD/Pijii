@@ -49,7 +49,15 @@ Route::middleware(['auth', 'verified'])->group(function()
     Route::delete('/tasks/{task}/delete', [TaskController::class, 'delete'])->name('tasks.delete');
 
     Route::get('/profile', [UserController::class, 'show'])->name('user.show');
-     Route::get('/profile/edit', action: [UserController::class, 'edit'])->name('user.edit');
+    Route::get('/profile/edit', action: [UserController::class, 'edit'])->name('user.edit');
     Route::put('/profile/update', [UserController::class, 'update'])->name('user.update');
     Route::delete('/profile/delete', [UserController::class, 'destroy'])->name('user.destroy');
+
+    Route::inertia('/Archived','Archived');
+    Route::inertia('/Notification','Notifications');
+    Route::inertia('/Deleted','Deleted');
+    Route::inertia('/Settings','Settings');
+    Route::inertia('/Create/Options','Create_Options');
+
+
 });

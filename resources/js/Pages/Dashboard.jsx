@@ -1,61 +1,76 @@
 import {NavbarMinimalColored} from "../layouts/mantine/sidebar.jsx";
+import Layout from '../layouts/Layout';
 import PijiHeader from "../layouts/components/Header.jsx";
 import PijiHeader2 from "../layouts/components/Header2.jsx";
 import PijiCard from "../layouts/components/Task_Card.jsx";
 import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers} from '@tabler/icons-react';
 import { Link } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 
 
-export default function Dashboard({name}) {
+
+export default function Dashboard() {
+      const { user } = usePage().props;
+    
   return (
-    <div className="piji-green">
-            <div className="flex flex-row w-full">
+    <div className="piji-green flex flex-col w-screen h-screen bg-amber-50">
+
+            <div className="flex flex-row w-full h-full">
                 <NavbarMinimalColored/>
 
-                <div className="flex flex-col w-full" >
+                <div className="flex flex-col w-full  h-full" >
                     <PijiHeader/> 
                     <PijiHeader2 title="Dashboard"/>
 
-                    <div>
-                        <div style={{margin:"10px", padding:"30px 20px "}} className="bg-white flex flex-row w-[720px] h-[280px] rounded-3xl drop-shadow-md " >
-                        <div className="flex flex-col gap-7">
-                        <div className="flex flex-col">
-                            <h1 className="text-3xl font-extrabold"> Hi, {name}</h1>
-                            <p className="text-2xl font-semibold">
-                                What are we doing <br />
-                                today?
-                            </p>
-                        </div>
+                    <div className="flex flex-row">
+                        <div>
+                            <div style={{margin:"10px 25px", padding:"25px 20px "}} className="bg-white flex flex-row max-w-[720px] h-[280px] rounded-3xl drop-shadow-md " >
+                                <div className="flex flex-col gap-7">
+                                    <div className="flex flex-col">
+                                        <h1 className="text-3xl font-extrabold"> Hi, {user.name}</h1>
+                                        <p className="text-2xl font-semibold">
+                                            What are we doing <br />
+                                            today?
+                                        </p>
+                                </div>
 
-                        <div className="flex flex-row">
-                            <div className="grid grid-cols-2 w-[400px] ">
-                            <Link className="flex items-center gap-1" style={{marginTop:"-20px"}} ><IconCalendarPlus size={24} color="royalblue"> </IconCalendarPlus>Check Calendar </Link>
-                            <Link className="flex gap-1" ><IconUsers size={24} color="green"> </IconUsers>Check Collaboration projects</Link>
-                            <Link className="flex items-center gap-1" style={{marginTop:"20px"}} ><IconFlag size={24} color="darkorange"> </IconFlag>Check Urgent Tasks</Link>
-                            <Link className="flex items-center gap-1" style={{marginTop:"20px"}}><IconMessageCircleQuestion size={24}> </IconMessageCircleQuestion>Ask Piji</Link>
-                            </div>
-                            
-                        </div> 
-                    </div>    
+                                <div className="flex flex-row">
+                                    <div className="grid grid-cols-2 w-[400px] ">
+                                        <Link className="flex items-center gap-1" style={{marginTop:"-20px"}} ><IconCalendarPlus size={24} color="royalblue"> </IconCalendarPlus>Check Calendar </Link>
+                                        <Link className="flex gap-1" ><IconUsers size={24} color="green"> </IconUsers>Check Collaboration projects</Link>
+                                        <Link className="flex items-center gap-1" style={{marginTop:"20px"}} ><IconFlag size={24} color="darkorange"> </IconFlag>Check Urgent Tasks</Link>
+                                        <Link className="flex items-center gap-1" style={{marginTop:"20px"}}><IconMessageCircleQuestion size={24}> </IconMessageCircleQuestion>Ask Piji</Link>
+                                    </div>                 
+                                </div> 
+                        </div>    
 
                         <div style={{margin:"-150px 0 0 0"}}  className="flex object-cover w-[450px] h-[400px] overflow-visible">
-                        <img src="/images/PIJI SPRITE1.png" alt="Sprite" className="w-100% h-100% rounded-lg  object-cover overflow-visible scale-x-[-1]"/>
-                        
+                            <img src="/images/PIJI SPRITE1.png" alt="Sprite" className="w-100% h-100% rounded-lg  object-cover overflow-visible scale-x-[-1]"/>
                         </div>
-
-
                     </div>
 
-                                <PijiCard/>
+    
+                    </div>
+                
+                     <div style={{margin:"10px 25px", padding:"25px 20px "}} className="bg-blue-300 flex flex-row w-full h-[280px] rounded-3xl drop-shadow-md " >
+                     </div>
+
+                </div>
+
+                {/* dapat may foreach to */}
+                <div className="flex flex-row justify-start">
+                <PijiCard/>
+
+
+                </div>
 
                 </div>
             </div>
-        </div>
     </div>                   
   );
 }
 
-Dashboard.layout = (page) => page;
+Dashboard.layout = (page) => <Layout>{page}</Layout>
 
 
 

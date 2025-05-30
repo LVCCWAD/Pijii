@@ -12,13 +12,13 @@ function Login() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-amber-50 p-6">
-            <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md">
-                <p className="text-center text-sm text-gray-500 italic mb-4">Note: This is just a placeholder.</p>
-                <h1 className="text-2xl font-bold text-amber-700 mb-6 text-center">Login to Pijii</h1>
+        <div className="flex items-center justify-center min-h-screen main-bg p-6">
+            <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md gap-3" style={{padding:"4rem"}}>
+                {/* <p className="text-center text-sm text-gray-500 italic mb-4">Note: This is just a placeholder.</p> */}
+                <h1 className="text-2xl font-bold text-amber-700 mb-6 text-center" style={{marginBottom:"1rem"}}>Login to Pijii</h1>
 
-                <form onSubmit={submit}>
-                    <div className="mb-4">
+                <form onSubmit={submit} className='gap-2'>
+                    <div style={{marginBottom:"1rem"}}>
                         <label className="block text-sm text-gray-700">Email</label>
                         <input
                             type="email"
@@ -29,7 +29,7 @@ function Login() {
                         {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                     </div>
 
-                    <div className="mb-4">
+                    <div style={{marginBottom:"1rem"}}>
                         <label className="block text-sm text-gray-700">Password</label>
                         <input
                             type="password"
@@ -43,7 +43,7 @@ function Login() {
                     <button
                         type="submit"
                         disabled={processing}
-                        className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700"
+                        className="w-full bg-amber-600 text-white rounded hover:bg-amber-700" style={{Padding:"2rem 0"}} 
                     >
                         {processing ? 'Logging in...' : 'Login'}
                     </button>

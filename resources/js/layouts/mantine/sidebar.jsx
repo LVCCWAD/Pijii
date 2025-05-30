@@ -2,19 +2,24 @@ import { useState } from 'react';
 import { IconTrash,IconSettings2, IconArchive,  } from '@tabler/icons-react';
 import { Center, Stack, Tooltip, UnstyledButton } from '@mantine/core';
 import classes from './NavbarMinimalColored.module.css';
+import { Link } from '@inertiajs/react';
 
-function NavbarLink({ icon: Icon, label, active, onClick }) {
-    return (
+function NavbarLink({ icon: Icon, label, active, onClick, link }) {
+  const content = (
+    <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
+      <Icon size={40} stroke={1.5} />
+    </UnstyledButton>
+  );
+
+  return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
-
-        <Icon size={40} stroke={1.5}/>
-      </UnstyledButton>
-    </Tooltip>);
+      {link ? <Link href={link}>{content}</Link> : content}
+    </Tooltip>
+  );
 }
 const mockdata = [
-    { icon: IconArchive, label: 'Archived' },
-    { icon: IconTrash, label: 'Recently Deleted' },
+    { icon: IconArchive, label: 'Archived', link: '/Archived'},
+    { icon: IconTrash, label: 'Recently Deleted', link:'/Deleted' },
 
 ];
 export function NavbarMinimalColored() {
@@ -24,7 +29,7 @@ export function NavbarMinimalColored() {
     
     return (<nav className={classes.navbar}>
       <Center>
-        <img src="/images/PIJI LOGO.png" alt="Logo" className="object-cover  w-[70px] h-[70px]"/>
+        <Link href={'/'}><img src="/images/PIJI LOGO.png" alt="Logo" className="object-cover  w-[70px] h-[70px]"/></Link>
       </Center>
 
       <div className={classes.navbarMain}>
@@ -37,7 +42,7 @@ export function NavbarMinimalColored() {
 
       <div style={{margin:"0px 0 0 0"}} className="justify-center"> 
         <Stack justify="center">
-          <NavbarLink icon={IconSettings2} label="Settings" size={40}/>
+          <NavbarLink icon={IconSettings2} label="Settings" link="/Settings" size={40}/>
         </Stack>
       </div>
 

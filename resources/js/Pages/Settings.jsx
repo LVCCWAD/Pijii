@@ -1,6 +1,6 @@
-import {NavbarMinimalColored} from "../layouts/mantine/sidebar.jsx";
+import {NavbarMinimalColored_settings} from "../layouts/mantine/sidebar_settings.jsx";
 import PijiHeader from "../layouts/components/Header.jsx";
-import PijiHeader2 from "../layouts/components/Header2.jsx";
+
 import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers} from '@tabler/icons-react'
 import { Link } from '@inertiajs/react';
 
@@ -9,18 +9,15 @@ import { Link } from '@inertiajs/react';
 
 export default function Settings() {
   return (
-    <div class="piji-green">
+    <div class="main-bg">
     <div className="flex flex-row w-full">
-      <NavbarMinimalColored/>
+      <NavbarMinimalColored_settings/>
 
         <div class="flex flex-col w-full" >
-            <PijiHeader/> 
-            <PijiHeader2 title="Settings"/>
+            <PijiHeader showBackButton={true} /> 
 
-                {/* might as well gawing component na tong part */}
     
 
-        <h1>Register</h1>
 
         </div>
     </div>

@@ -20,7 +20,7 @@ export default function Notifications() {
                 {/* might as well gawing component na tong part */}
     
 
-        <h1>Register</h1>
+        
 
         </div>
     </div>

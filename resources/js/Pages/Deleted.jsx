@@ -20,7 +20,7 @@ export default function Deleted() {
                 {/* might as well gawing component na tong part */}
     
 
-        <h1>Login</h1>
+        <h1>No deleted tasks yet</h1>
 
         </div>
     </div>

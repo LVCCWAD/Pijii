@@ -20,7 +20,8 @@ export default function Archived() {
                 {/* might as well gawing component na tong part */}
     
 
-        <h1>Login</h1>
+        <h1>No archived tasks yet</h1>
+
 
         </div>
     </div>

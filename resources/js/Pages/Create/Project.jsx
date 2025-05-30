@@ -29,14 +29,14 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto flex flex-col justify-items-center" style={{margin:'0 auto'}}>
+    <div className="max-w-3xl mx-auto flex flex-col justify-items-center" style={{margin:'0 auto', padding:'10px'}}>
       {/* <h2 className="text-2xl font-semibold text-green-700 mb-6">
         Create New Project
       </h2> */}
 
       <form onSubmit={handleSubmit} noValidate>
         {/* Project Name */}
-        <div className="mb-4">
+        <div style={{marginBottom:'10px',}}>
           <label
             htmlFor="project_name"
             className="block text-sm font-medium text-gray-700"
@@ -50,6 +50,7 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
             value={formData.project_name}
             onChange={handleChange}
             required
+            style={{padding:'5px'}}
             className={`w-full border rounded-md p-2 ${
               errors.project_name ? "border-red-500" : "border-gray-300"
             }`}
@@ -62,7 +63,7 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
         </div>
 
         {/* Category */}
-        <div className="mb-4">
+        <div style={{marginBottom:'10px',}}>
           <label
             htmlFor="category_id"
             className="block text-sm font-medium text-gray-700"
@@ -75,6 +76,7 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
             value={formData.category_id}
             onChange={handleChange}
             required
+            style={{padding:'5px'}}
             className={`w-full border rounded-md p-2 ${
               errors.category_id ? "border-red-500" : "border-gray-300"
             }`}
@@ -94,7 +96,7 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
         </div>
 
         {/* Stage */}
-        <div className="mb-4">
+        <div style={{marginBottom:'10px',}}>
           <label
             htmlFor="stage_id"
             className="block text-sm font-medium text-gray-700"
@@ -107,6 +109,7 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
             value={formData.stage_id}
             onChange={handleChange}
             required
+            style={{padding:'5px'}}
             className={`w-full border rounded-md p-2 ${
               errors.stage_id ? "border-red-500" : "border-gray-300"
             }`}
@@ -126,7 +129,7 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
         </div>
 
         {/* Priority Level */}
-        <div className="mb-4">
+        <div style={{marginBottom:'10px',}}>
           <label
             htmlFor="priority_level"
             className="block text-sm font-medium text-gray-700"
@@ -139,6 +142,8 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
             value={formData.priority_level}
             onChange={handleChange}
             required
+            style={{padding:'5px'}}
+
             className={`w-full border rounded-md p-2 ${
               errors.priority_level ? "border-red-500" : "border-gray-300"
             }`}
@@ -155,7 +160,7 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
         </div>
 
         {/* Scheduled Date */}
-        <div className="mb-4">
+        <div style={{marginBottom:'10px',}}>
           <label
             htmlFor="scheduled_at"
             className="block text-sm font-medium text-gray-700"
@@ -168,6 +173,7 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
             id="scheduled_at"
             value={formData.scheduled_at}
             onChange={handleChange}
+            style={{padding:'5px'}}
             className={`w-full border rounded-md p-2 ${
               errors.scheduled_at ? "border-red-500" : "border-gray-300"
             }`}
@@ -180,9 +186,10 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
         </div>
 
         {/* Submit Button */}
-        <div className="mb-6">
+        <div style={{marginBottom:'10px',}}>
           <button
             type="submit"
+            style={{padding:'10px'}}
             className="bg-green-700 text-white px-6 py-2 rounded-md hover:bg-green-800 transition"
           >
             Create Project

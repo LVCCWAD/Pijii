@@ -54,9 +54,15 @@ Route::middleware(['auth', 'verified'])->group(function()
     Route::delete('/profile/delete', [UserController::class, 'destroy'])->name('user.destroy');
 
     Route::inertia('/Archived','Archived');
-    Route::inertia('/Notification','Notifications');
+    Route::inertia('/Notifications','Notifications');
     Route::inertia('/Deleted','Deleted');
     Route::inertia('/Settings','Settings');
+    
+    Route::inertia('/settings/general','Settings/General');
+    Route::inertia('/settings/notification','Settings/Notifications');
+    Route::inertia('/settings/preferences','Settings/Preferences');
+    Route::inertia('/settings/profile','Settings/profile');
+
     Route::inertia('/Create/Options','Create_Options');
 
 

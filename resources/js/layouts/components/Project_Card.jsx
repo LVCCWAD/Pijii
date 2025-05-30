@@ -1,25 +1,15 @@
 import { IconDotsVertical, IconPlus, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import PriorityToggleButton from './PriorityToggleButton';
-
-function getBgColor(level) {
-  switch (level) {
-    case 'red': return 'bg-red-200';
-    case 'blue': return 'bg-blue-200';
-    case 'green': return 'bg-green-200';
-    case 'yellow': return 'bg-yellow-200';
-    // Add more as needed
-    default: return 'bg-white';
-  }
-}
+import { useUser } from '../../Pages/UserContext.jsx';
 
 export default function ProjectCard({
   title = "Personal Task",
   badgeNumber = 1,
   badgeColor = "bg-amber-50",
-  cardBg = "green"
+  cardBg = "bg-green-100",
 }) {
   return (
-<div className={`project-card ${getBgColor(cardBg)} rounded-3xl drop-shadow-md`}>
+<div className={`project-card ${cardBg} rounded-3xl drop-shadow-md `}>
       {/* Top Status Section */}
       <div className='flex flex-col'>
         <div className="flex flex-row gap-1 justify-between" style={{ padding: '15px 10px' }}>

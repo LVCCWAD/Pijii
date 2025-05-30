@@ -102,7 +102,7 @@ export default function Dashboard() {
                 title="PERSONAL TASKS"
                 badgeNumber={1}
                 badgeColor="bg-white"
-                cardBg="blue"
+                cardBg="bg-blue-200"
                 />
 
                 <ProjectCard
@@ -115,7 +115,7 @@ export default function Dashboard() {
                 title="WORK TASKS"
                 badgeNumber={3}
                 badgeColor="bg-white"
-                cardBg="piji-green-3"
+                cardBg="red"
                 />
                 </div>
 

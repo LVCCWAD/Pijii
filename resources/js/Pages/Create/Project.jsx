@@ -29,10 +29,10 @@ export default function CreateProjectForm({ categories = [], stages = [] }) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <h2 className="text-2xl font-semibold text-green-700 mb-6">
+    <div className="max-w-3xl mx-auto flex flex-col justify-items-center" style={{margin:'0 auto'}}>
+      {/* <h2 className="text-2xl font-semibold text-green-700 mb-6">
         Create New Project
-      </h2>
+      </h2> */}
 
       <form onSubmit={handleSubmit} noValidate>
         {/* Project Name */}

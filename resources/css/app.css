@@ -39,6 +39,19 @@
   background-color: rgb(228, 202, 165); 
 }
 
+.piji-blue {
+  background-color: rgb(63, 118, 168); 
+}
+
+.piji-red {
+  background-color: rgb(167, 96, 84); 
+}
+
+.piji-green-3 {
+  background-color: rgb(62, 119, 67); 
+}
+
+
 /* color palette   */
 .main-bg {
   height: 100vh;

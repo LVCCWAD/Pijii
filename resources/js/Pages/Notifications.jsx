@@ -1,7 +1,7 @@
 import {NavbarMinimalColored} from "../layouts/mantine/sidebar.jsx";
 import PijiHeader from "../layouts/components/Header.jsx";
 import PijiHeader2 from "../layouts/components/Header2.jsx";
-import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers} from '@tabler/icons-react'
+import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers, IconX} from '@tabler/icons-react'
 import { Link } from '@inertiajs/react';
 
 

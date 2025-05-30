@@ -5,7 +5,7 @@ import PijiHeader2 from "../layouts/components/Header2.jsx";
 import ProjectCard from "../layouts/components/Project_Card.jsx";
 import PijiCard from "../layouts/components/Task_Card.jsx";
 
-import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers} from '@tabler/icons-react';
+import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers, IconX} from '@tabler/icons-react';
 import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 
@@ -54,18 +54,69 @@ export default function Dashboard() {
     
                     </div>
                 
-                     <div style={{margin:"10px 25px", padding:"25px 20px "}} className="bg-blue-300 flex flex-row w-full h-[280px] rounded-3xl drop-shadow-md " >
+                    {/* dapat may foreach to */}
+                     <div style={{margin:"10px 25px"}} className=" flex flex-col w-full h-[280px] rounded-3xl drop-shadow-md " >
+
+                        {/* notif 1 */}
+                        <div
+                        style={{ margin: "5px 0", padding: "25px 20px" }}
+                        className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between"
+                        >
+                        Notification 1
+                        <Link><IconX/></Link>
+                        </div>
+                        {/* notif 2 */}
+
+                        <div
+                        style={{ margin: "5px 0", padding: "25px 20px" }}
+                        className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between"
+                        >
+                        Notification 2
+                        <Link><IconX/></Link>
+                        </div>
+                        {/* notif 3 */}
+
+                        <div
+                        style={{ margin: "5px 0", padding: "25px 20px" }}
+                        className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between"
+                        >
+                        Notification 3
+                        <Link><IconX/></Link>
+                        </div>
+                        {/* notif 4 */}
+                         <div
+                        style={{ margin: "5px 0", padding: "25px 20px" }}
+                        className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between"
+                        >
+                        Notification 4
+                        <Link><IconX/></Link>
+                        </div>
                      </div>
 
                 </div>
 
                 {/* dapat may foreach to */}
-                <div className="flex flex-row content-evenly">
-                <ProjectCard/>
-                <ProjectCard/>
-                <PijiCard/>
+                <div className="flex flex-row " style={{margin:'0 20px'}}>
 
+                <ProjectCard
+                title="PERSONAL TASKS"
+                badgeNumber={1}
+                badgeColor="bg-white"
+                cardBg="blue"
+                />
 
+                <ProjectCard
+                title="SCHOOL TASKS"
+                badgeNumber={2}
+                badgeColor="bg-white"
+                cardBg="red"
+                />
+                <ProjectCard
+                title="WORK TASKS"
+                badgeNumber={3}
+                badgeColor="bg-white"
+                cardBg="piji-green-3"
+                />
                 </div>
 
                 </div>

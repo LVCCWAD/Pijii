@@ -13,6 +13,33 @@
   margin: 0 auto;
   font-family: 'Inter', sans-serif;
 }
+.project-card {
+  display: flex;
+  flex-direction: column;
+  max-width: 24rem;
+  min-height: 10rem;
+  width: 100%;
+  background-color: rgb(65, 156, 209);
+  border-radius: 0.5rem; /* rounded-2xl */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+  overflow: hidden;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+}
+
+.inner-project-card {
+  display: flex;
+  flex-direction: column;
+  max-width: auto;
+  min-height: 10rem;
+
+  background-color: rgb(255, 255, 255);
+  border-radius: 1.2rem; /* rounded-2xl */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+  overflow: hidden;
+  margin: 0 10px;
+  font-family: 'Inter', sans-serif;
+}
 
 .card-top {
   background-color: #0369a1; /* sky-700  should be interchangable*/ 

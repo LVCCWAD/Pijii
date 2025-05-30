@@ -2,7 +2,9 @@ import {NavbarMinimalColored} from "../layouts/mantine/sidebar.jsx";
 import Layout from '../layouts/Layout';
 import PijiHeader from "../layouts/components/Header.jsx";
 import PijiHeader2 from "../layouts/components/Header2.jsx";
+import ProjectCard from "../layouts/components/Project_Card.jsx";
 import PijiCard from "../layouts/components/Task_Card.jsx";
+
 import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers} from '@tabler/icons-react';
 import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
@@ -58,7 +60,9 @@ export default function Dashboard() {
                 </div>
 
                 {/* dapat may foreach to */}
-                <div className="flex flex-row justify-start">
+                <div className="flex flex-row content-evenly">
+                <ProjectCard/>
+                <ProjectCard/>
                 <PijiCard/>
 
 

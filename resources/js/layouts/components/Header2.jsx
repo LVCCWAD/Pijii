@@ -2,10 +2,13 @@ import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { Modal, Button } from '@mantine/core';
 import DashboardCreator from '../../Pages/Create_Options';
+import { useUser } from '../../Pages/UserContext.jsx';
+import CreateProjectForm from '../../Pages/Create/Project.jsx';
 
 export default function PijiHeader2({ title = "Title" }) {
     const [opened, setOpened] = useState(false);
-  
+    const { user } = useUser();
+    
   return (
     <div className="flex justify-between items-center piji-green-2" style={{ padding: "10px 20px" }}>
       <h1 className="text-5xl font-bold">{title}</h1>
@@ -19,10 +22,13 @@ export default function PijiHeader2({ title = "Title" }) {
     </Link> */}
 
     
-          <a onClick={() => setOpened(true)}  className="flex text-xl bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-amber-600"
-      style={{ padding: "10px 35px" }}>
-            Create +
-          </a>
+        <a
+          onClick={() => setOpened(true)}
+          className="flex text-xl bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-amber-600 active:scale-95 active:bg-amber-200"
+          style={{ padding: "10px 35px" }}
+        >
+          Create +
+        </a>
 
      <Modal
         opened={opened}
@@ -47,16 +53,16 @@ export default function PijiHeader2({ title = "Title" }) {
           },
 
         content: {
-            width: '90%',
-            maxWidth: '90%',
-            height: '80%',
-            maxHeight: '80%',
+            width: '100%',
+            maxWidth: '100%',
+            height: '100%',
+            maxHeight: '100%',
             backgroundColor: '#fce4b3',
         }}}
       >
         {/* Modal content goes here */}
         
-        <DashboardCreator/>
+        <CreateProjectForm/>
       </Modal>
 
 

@@ -15,12 +15,12 @@ function Register() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-amber-50 p-6">
-            <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md">
-                <p className="text-center text-sm text-gray-500 italic mb-4">Note: This is just a placeholder.</p>
+        <div className="flex items-center justify-center min-h-screen main-bg p-6">
+            <div className="w-full max-w-sm bg-white rounded-lg shadow-md "style={{padding:"4rem"}}>
+                {/* <p className="text-center text-sm text-gray-500 italic mb-4">Note: This is just a placeholder.</p> */}
                 <h1 className="text-2xl font-bold text-amber-700 mb-6 text-center">Register for Pijii</h1>
 
-                <form onSubmit={submit}>
+                <form onSubmit={submit} className='gap-2'>
                     <div className="mb-4">
                         <label className="block text-sm text-gray-700">Name</label>
                         <input
@@ -68,10 +68,15 @@ function Register() {
                     <button
                         type="submit"
                         disabled={processing}
-                        className="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 rounded-lg transition"
+                        className="w-full bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition"
+                        style={{padding:'0.5rem', marginTop:'10px'}}
                     >
                         {processing ? 'Registering...' : 'Register'}
                     </button>
+
+                    <div className="mt-4 text-center">
+                    <p>Already have an account? <a className="text-amber-600 hover:text-amber-700" href="/login">Login</a></p>
+                </div>
                 </form>
             </div>
         </div>

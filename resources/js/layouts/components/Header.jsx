@@ -2,10 +2,10 @@ import React from 'react';
 import './header.css';
 import { IconZoom, IconBell } from '@tabler/icons-react';
 import { Link } from '@inertiajs/react';
-import { usePage } from '@inertiajs/react';
-
+import { useUser } from '../../Pages/UserContext.jsx';
 
 export default function PijiHeader() {
+
   const today = new Date().toLocaleDateString('en-US', {
     weekday: 'short',
     month: 'long',
@@ -13,7 +13,7 @@ export default function PijiHeader() {
     year: 'numeric',
   });
 
-  const { user } = usePage().props;
+  const { user } = useUser();
 
   return (
     <header className="app-header">
@@ -26,7 +26,7 @@ export default function PijiHeader() {
 
       {/* Middle: Date */}
       <div className="header-middle">
-        <p className="text-xl font-semibold date-text">{today}</p>
+        <p className="text-xl font-bold date-text">{today}</p>
       </div>
 
       {/* Right: Notification and Profile */}

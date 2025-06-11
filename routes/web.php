@@ -9,11 +9,11 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmailVerificationController;
 
 Route::middleware('guest')->group(function () {
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('showRegisterForm');
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
 
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
 });
 
 Route::get('/email/verify', [EmailVerificationController::class, 'showNotice'])->middleware('auth')->name('verification.notice');
@@ -22,7 +22,7 @@ Route::post('/email/verification-notification', [EmailVerificationController::cl
 
 Route::middleware(['auth', 'verified'])->group(function() 
 {
-    Route::get('/', [AuthController::class, 'showDashboardPage'])->name('showDashboardPage');
+    Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');

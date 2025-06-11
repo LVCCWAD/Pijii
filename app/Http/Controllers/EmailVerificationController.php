@@ -16,7 +16,7 @@ class EmailVerificationController extends Controller
     {
         $request->fulfill();
      
-        return redirect()->route('showDashboardPage')->with('success', 'Registration Successfull! Welcome to Pijii!');
+        return redirect()->route('dashboard')->with('success', 'Registration Successfull! Welcome to Pijii!');
     }
 
     public function send(Request $request) 

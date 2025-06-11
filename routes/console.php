@@ -14,4 +14,4 @@ Schedule::call(function () {
         ->whereNull('email_verified_at')
         ->where('created_at', '<=', now()->subDays(7)) 
         ->delete();
-})->cron('0 0 * * 0');
+})->weekly();

@@ -55,7 +55,7 @@ class AuthController extends Controller
         {
             Auth::login($user);
 
-            return redirect()->intended(route('showDashboardPage'))->with('success', "Welcome back!");
+            return redirect()->intended(route('dashboard'))->with('success', "Welcome back!");
         }
 
         if (!$user)
@@ -74,7 +74,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function showDashboardPage()
+    public function dashboard()
     {
         return Inertia::render('Dashboard', [
         'user' => Auth::user(),
@@ -85,7 +85,7 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-        return redirect()->route('showLoginForm');
+        return redirect()->route('login');
     }
 
 }

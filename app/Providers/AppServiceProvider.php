@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Project;
 use App\Models\ProjectCollaborator;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,5 +29,9 @@ class AppServiceProvider extends ServiceProvider
                 ->where('user_id', $user->id)
                 ->exists();
         });
+        if ($this->app->environment('production'))
+        {
+            URL::forceScheme('https');
+        }
     }
 }

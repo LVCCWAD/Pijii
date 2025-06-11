@@ -5,7 +5,7 @@ import PijiHeader2 from "../layouts/components/Header2.jsx";
 import ProjectCard from "../layouts/components/Project_Card.jsx";
 import PijiCard from "../layouts/components/Task_Card.jsx";
 
-import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers, IconX} from '@tabler/icons-react';
+import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers, IconX, IconBell, IconBellFilled} from '@tabler/icons-react';
 import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 
@@ -20,13 +20,15 @@ export default function Dashboard() {
             <div className="flex flex-row w-full h-full">
                 <NavbarMinimalColored/>
 
-                <div className="flex flex-col w-full  h-full" >
+                {/* Dashboard Content Container */}
+                <div className="flex flex-col w-full  h-full ">
                     <PijiHeader/> 
                     <PijiHeader2 title="Dashboard"/>
 
-                    <div className="flex flex-row">
+                    {/* Dashboard Content Container */}
+                    <div className="flex flex-row justify-around" style={{padding:"20px"}}>
                         <div>
-                            <div style={{margin:"10px 25px", padding:"25px 20px "}} className="bg-white flex flex-row max-w-[720px] h-[280px] rounded-3xl drop-shadow-md " >
+                            <div style={{ padding:"25px 20px "}} className="bg-white flex flex-row max-w-[720px] h-[280px] rounded-3xl drop-shadow-md " >
                                 <div className="flex flex-col gap-7">
                                     <div className="flex flex-col">
                                         <h1 className="text-3xl font-extrabold"> Hi, {user.name}</h1>
@@ -35,7 +37,8 @@ export default function Dashboard() {
                                             today?
                                         </p>
                                 </div>
-
+                                
+                                {/* Box 1 */}
                                 <div className="flex flex-row">
                                     <div className="grid grid-cols-2 w-[400px] ">
                                         <Link className="flex items-center gap-1" style={{marginTop:"-20px"}} ><IconCalendarPlus size={24} color="royalblue"> </IconCalendarPlus>Check Calendar </Link>
@@ -54,41 +57,38 @@ export default function Dashboard() {
     
                     </div>
                 
-                    {/* dapat may foreach to */}
-                     <div style={{margin:"10px 25px"}} className=" flex flex-col w-full h-[280px] rounded-3xl drop-shadow-md " >
+                    {/* notifcations -  bg-gray-100*/}
+                     <div style={{ padding:"20px"}} className=" flex flex-col min-w-[450px] h-[280px] rounded-3xl drop-shadow-md  overflow-hidden" >
+                            <Link href="/Notifications">
+                                <div class="flex flex-row gap-4">
+                                    <div style={{ margin:"6px 0"}}><IconBell size={28} /></div>
+                                    <h1 className="text-4xl font-bold"> Notifications</h1>
+                                </div>
+                            </Link>
+
+                    {/* insert foreach loop -  bg-gray-100*/}
 
                         {/* notif 1 */}
-                        <div
-                        style={{ margin: "5px 0", padding: "25px 20px" }}
+                        <div style={{ margin: "5px 0", padding: "25px 20px" }}
                         className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between"
                         >
                         Notification 1
                         <Link><IconX/></Link>
                         </div>
-                        {/* notif 2 */}
 
-                        <div
-                        style={{ margin: "5px 0", padding: "25px 20px" }}
+                        {/* notif 1 */}
+                        <div style={{ margin: "5px 0", padding: "25px 20px" }}
                         className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between"
                         >
-                        Notification 2
+                        Notification 2 placeholder
                         <Link><IconX/></Link>
                         </div>
-                        {/* notif 3 */}
 
-                        <div
-                        style={{ margin: "5px 0", padding: "25px 20px" }}
+                                                {/* notif 1 */}
+                        <div style={{ margin: "5px 0", padding: "25px 20px" }}
                         className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between"
                         >
-                        Notification 3
-                        <Link><IconX/></Link>
-                        </div>
-                        {/* notif 4 */}
-                         <div
-                        style={{ margin: "5px 0", padding: "25px 20px" }}
-                        className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between"
-                        >
-                        Notification 4
+                        Notification 3 placeholder
                         <Link><IconX/></Link>
                         </div>
                      </div>
@@ -96,27 +96,28 @@ export default function Dashboard() {
                 </div>
 
                 {/* dapat may foreach to */}
-                <div className="flex flex-row " style={{margin:'0 20px'}}>
+                <div className="flex flex-row justify-center gap-4" style={{margin:'0 20px'}}>
 
-                <ProjectCard
-                title="PERSONAL TASKS"
-                badgeNumber={1}
-                badgeColor="bg-white"
-                cardBg="bg-blue-200"
-                />
+                
+                    <ProjectCard
+                    title="PERSONAL TASKS"
+                    badgeNumber={1}
+                    badgeColor="bg-white"
+                    cardBg="piji-orange-1"
+                    />
 
-                <ProjectCard
-                title="SCHOOL TASKS"
-                badgeNumber={2}
-                badgeColor="bg-white"
-                cardBg="red"
-                />
-                <ProjectCard
-                title="WORK TASKS"
-                badgeNumber={3}
-                badgeColor="bg-white"
-                cardBg="red"
-                />
+                    <ProjectCard
+                    title="SCHOOL TASKS"
+                    badgeNumber={2}
+                    badgeColor="bg-white"
+                    cardBg="piji-cyan-1"
+                    />
+                    <ProjectCard
+                    title="WORK TASKS"
+                    badgeNumber={3}
+                    badgeColor="bg-white"
+                    cardBg="piji-green-1"
+                    />
                 </div>
 
                 </div>

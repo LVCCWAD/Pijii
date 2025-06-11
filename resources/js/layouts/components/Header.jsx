@@ -43,9 +43,9 @@ export default function PijiHeader({ showBackButton = false }) {
 
       {/* Right: Notifications & Profile */}
       <div className="header-right" style={{ margin: '0 90px 0 0' }}>
-        <div className="notification">
+        {/* <div className="notification">
           <Link href="/Notifications"><IconBell size={29} /></Link>
-        </div>
+        </div> */}
 
         <Link className="profile" href="/profile">
           <img

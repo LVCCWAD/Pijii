@@ -15,12 +15,46 @@ export default function Category() {
 
         <div class="flex flex-col w-full" >
             <PijiHeader/> 
-            <PijiHeader2 title="Archived"/>
+            <PijiHeader2 title="Category"/>
 
                 {/* might as well gawing component na tong part */}
     
 
-        <h1>Login</h1>
+
+        <div class="" style={{padding:'15px'}}>
+        <h1 className="text-3xl font-bold">Category Name</h1> 
+
+          <div class="grid grid-cols-4 gap-2 p-4" style={{padding:'10px'}}>
+              <div class="bg-gray-100 rounded-lg shadow h-full" style={{padding:'10px'}}>
+                <h2 class="font-semibold text-lg mb-2 text-center">To-do</h2>
+
+                <div>for each loop</div>
+                dine items 
+
+
+              </div>
+
+              <div class="bg-yellow-100 rounded-lg shadow" style={{padding:'10px'}}>
+                <h2 class="font-semibold text-lg mb-2 text-center">In Progress</h2>
+                                for each loop
+
+              </div>
+
+              <div class="bg-green-100 rounded-lg shadow" style={{padding:'10px'}}>
+                <h2 class="font-semibold text-lg mb-2 text-center">Completed</h2>
+                                for each loop
+
+              </div>
+
+              <div class="bg-red-100 rounded-lg shadow" style={{padding:'10px'}}>
+                <h2 class="font-semibold text-lg mb-2 text-center">On-hold</h2>
+                                for each loop
+
+              </div>
+        </div>
+
+
+        </div>
 
         </div>
     </div>

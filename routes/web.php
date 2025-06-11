@@ -53,11 +53,18 @@ Route::middleware(['auth', 'verified'])->group(function()
     Route::put('/profile/update', [UserController::class, 'update'])->name('user.update');
     Route::delete('/profile/delete', [UserController::class, 'destroy'])->name('user.destroy');
 
+
+    // for checking routes only at the moment
+
     Route::inertia('/Archived','Archived');
     Route::inertia('/Notifications','Notifications');
     Route::inertia('/Deleted','Deleted');
     Route::inertia('/Settings','Settings');
     
+    Route::inertia('/Category','Category');
+    Route::inertia('/Project','Project');
+
+
     Route::inertia('/settings/general','Settings/General');
     Route::inertia('/settings/notification','Settings/Notifications');
     Route::inertia('/settings/preferences','Settings/Preferences');

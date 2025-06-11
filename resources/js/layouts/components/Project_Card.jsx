@@ -1,15 +1,17 @@
 import { IconDotsVertical, IconPlus, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import PriorityToggleButton from './PriorityToggleButton';
+
+import { Link } from '@inertiajs/react';
 import { useUser } from '../../Pages/UserContext.jsx';
 
 export default function ProjectCard({
   title = "Personal Task",
   badgeNumber = 1,
   badgeColor = "bg-amber-50",
-  cardBg = "bg-green-100",
+  cardBg = "bg-red-100",
 }) {
   return (
-<div className={`project-card ${cardBg} rounded-3xl drop-shadow-md `}>
+<div className={`project-card ${cardBg} rounded-2xl drop-shadow-md `}>
       {/* Top Status Section */}
       <div className='flex flex-col'>
         <div className="flex flex-row gap-1 justify-between" style={{ padding: '15px 10px' }}>
@@ -17,7 +19,11 @@ export default function ProjectCard({
             <div className={`flex ${badgeColor} w-8 h-8 rounded-full items-center justify-center`} style={{ margin: '-3px 0' }}>
               <h1 className='font-semibold'>{badgeNumber}</h1>
             </div>
-            <h1 className='font-bold text-xl'>{title}</h1>
+
+          {/* Currently only directs to the same category, with no */}
+            <Link href="/Category"> 
+                <h1 className='font-bold text-xl'>{title}</h1>
+            </Link>  
           </div>
 
           <div className='flex flex-row gap-2' id='right'>
@@ -27,11 +33,16 @@ export default function ProjectCard({
         </div>
 
         {/* Task Preview */}
+
         <div className='inner-project-card' style={{ padding: '15px' }}>
-          <div className='flex flex-row justify-between'>
-            <h1 className='font-lightbold text-xl'>{title}</h1>
-            <IconDotsCircleHorizontal />
-          </div>
+          
+
+            <div className='flex flex-row justify-between'>
+              <h1 className='font-lightbold text-xl'>{title}</h1>
+              <IconDotsCircleHorizontal />
+            </div>
+            
+
 
           <div className='flex flex-row justify-between'>
             <p className='text-sm'>Today 11:50 PM</p>

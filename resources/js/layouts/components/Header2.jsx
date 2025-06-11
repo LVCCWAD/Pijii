@@ -35,7 +35,7 @@ export default function PijiHeader2({ title = "Title" }) {
         onClose={() => setOpened(false)}
         title={
           <div className=" text-2xl font-semibold">
-            Create New
+            Create New Project
           </div>}
         centered
         size="auto"
@@ -49,7 +49,7 @@ export default function PijiHeader2({ title = "Title" }) {
           header:{
                  position: 'relative',
             justifyContent: 'center',
-            backgroundColor: "#fff5e1"
+            backgroundColor: "#fce4b3"
           },
 
         content: {
@@ -57,7 +57,7 @@ export default function PijiHeader2({ title = "Title" }) {
             maxWidth: '100%',
             height: '100%',
             maxHeight: '100%',
-            backgroundColor: '#fce4b3',
+            backgroundColor: '#fff5e1',
         }}}
       >
         {/* Modal content goes here */}

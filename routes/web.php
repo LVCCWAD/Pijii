@@ -61,8 +61,9 @@ Route::middleware(['auth', 'verified'])->group(function()
     Route::inertia('/Deleted','Deleted');
     Route::inertia('/Settings','Settings');
     
-    Route::inertia('/Category','Category');
-    Route::inertia('/Project','Project');
+    Route::inertia('/Category','Category_view');
+    Route::inertia('/Project','Project_view');
+    Route::inertia('/Task','Task_view');
 
 
     Route::inertia('/settings/general','Settings/General');

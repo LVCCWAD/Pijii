@@ -31,7 +31,7 @@ export function NavbarMinimalColored() {
       <Center>
         <Link href={'/'}><img src="/images/PIJI LOGO.png" alt="Logo" className="object-cover  w-[70px] h-[70px]"/></Link>
       </Center>
-
+      Piji
       <div className={classes.navbarMain}>
         <Stack justify="center" gap={10}>
           {links}

@@ -1,5 +1,8 @@
+@import 'tailwindcss';
+
 .navbar {
-  width: 90px;
+  @apply shadow-xl;
+  width: 100px;
   height: 100vh;
   padding: 20px 0;
   display: flex;
@@ -11,7 +14,8 @@
 }
 
 .navbar_settings {
-  width: 250px;
+  @apply shadow-xl;
+  width: 260px;
   height: 100vh;
   padding: 20px 0;
   display: flex;

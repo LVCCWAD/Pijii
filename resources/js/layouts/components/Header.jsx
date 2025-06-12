@@ -27,7 +27,7 @@ export default function PijiHeader({ showBackButton = false }) {
               {/* Conditionally show back button */}
         {showBackButton && (
           
-          <Link href="/"
+          <Link href={'/'}
           style={{padding:'10px'}}  
           className="piji-green flex items-center gap-1 text-md font-large text-white hover:underline rounded-xl">
             <IconArrowLeft size={24} />
@@ -42,7 +42,7 @@ export default function PijiHeader({ showBackButton = false }) {
       </div>
 
       {/* Right: Notifications & Profile */}
-      <div className="header-right" style={{ margin: '0 90px 0 0' }}>
+      <div className="header-right" style={{ margin: '5px 90px 0 0' }}>
         {/* <div className="notification">
           <Link href="/Notifications"><IconBell size={29} /></Link>
         </div> */}

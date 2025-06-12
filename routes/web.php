@@ -8,7 +8,11 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmailVerificationController;
 
+Route::get('/', function () {return Inertia::render('Landing');});
+Route::inertia('/Piji-App','Landing');
+
 Route::middleware('guest')->group(function () {
+
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 
@@ -55,6 +59,8 @@ Route::middleware(['auth', 'verified'])->group(function()
 
 
     // for checking routes only at the moment
+    
+
 
     Route::inertia('/Archived','Archived');
     Route::inertia('/Notifications','Notifications');
@@ -64,6 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function()
     Route::inertia('/Category','Category_view');
     Route::inertia('/Project','Project_view');
     Route::inertia('/Task','Task_view');
+
 
 
     Route::inertia('/settings/general','Settings/General');

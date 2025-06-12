@@ -10,7 +10,7 @@ export default function PijiHeader2({ title = "Title" }) {
     const { user } = useUser();
     
   return (
-    <div className="flex justify-between items-center piji-green-2" style={{ padding: "10px 20px" }}>
+    <div className="flex justify-between items-center piji-green-2 shadow-xl" style={{ padding: "0 20px 5px 20px" }}>
       <h1 className="text-5xl font-bold">{title}</h1>
     
     {/* <Link
@@ -22,7 +22,7 @@ export default function PijiHeader2({ title = "Title" }) {
     </Link> */}
 
     
-        <a
+        {/* <a
           onClick={() => setOpened(true)}
           className="flex text-xl bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-amber-600 active:scale-95 active:bg-amber-200"
           style={{ padding: "10px 35px" }}
@@ -60,10 +60,10 @@ export default function PijiHeader2({ title = "Title" }) {
             backgroundColor: '#fff5e1',
         }}}
       >
-        {/* Modal content goes here */}
+        Modal content goes here
         
         <CreateProjectForm/>
-      </Modal>
+      </Modal> */}
 
 
     </div>

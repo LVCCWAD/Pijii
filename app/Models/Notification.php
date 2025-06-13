@@ -9,14 +9,18 @@ class Notification extends Model
 {
     protected $fillable = [
         'user_id',
+        'task_id',
         'message',
         'is_read',
+        'notified_at',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'notified_at' => 'datetime',
     ];
+
 
     public function user(): BelongsTo
     {

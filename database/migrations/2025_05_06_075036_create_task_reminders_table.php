@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->integer('minutes_before');
             $table->timestamp('remind_at'); 
-            $table->timestamp('notified_at')->nullable(); 
+            $table->timestamp('notified_at')->nullable()->default(null); 
             $table->timestamps();
         });        
     }

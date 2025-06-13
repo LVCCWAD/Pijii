@@ -6,7 +6,9 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\EmailVerificationController;
+
 
 Route::get('/', function () {return Inertia::render('Landing');});
 Route::inertia('/Piji-App','Landing');
@@ -81,4 +83,9 @@ Route::middleware(['auth', 'verified'])->group(function()
     Route::inertia('/Create/Options','Create_Options');
 
 
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::patch('/notifications/{notification}/mark-read', [NotificationController::class, 'markRead'])->name('notifications.markRead');
+        Route::patch('/notifications/{notification}/mark-unread', [NotificationController::class, 'markUnread'])->name('notifications.markUnread');
+    });
 });

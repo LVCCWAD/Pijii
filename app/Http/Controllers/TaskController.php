@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\Stage;
 use App\Models\Project;
 use App\Models\Category;
+use App\Models\TaskReminder;
 use Illuminate\Http\Request;
-use App\Models\TaskCollaborator;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -53,31 +55,47 @@ class TaskController extends Controller
 
         return view('tasks.create', compact('projects', 'categories', 'users', 'stages'));
     }
-
+    
     public function store(Request $request)
     {
+        $user = Auth::user();
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'project_id' => 'required|exists:projects,id',
             'stage_id' => 'required|exists:stages,id',
-            'priority_level' => 'required|in:low,medium,high',
+            'priority_level' => ['required', Rule::in(['low', 'medium', 'high'])],
             'scheduled_at' => 'nullable|date',
             'is_collaborative' => 'nullable|boolean',
+            'minutes_before' => ['nullable', Rule::in([30, 60, 180, 1440, 2880])],
         ]);
 
-        Task::create([
+        $task = Task::create(attributes: [
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'project_id' => $validated['project_id'],
             'stage_id' => $validated['stage_id'],
             'priority_level' => $validated['priority_level'],
-            'scheduled_at' => isset($validated['scheduled_at']) ? \Carbon\Carbon::parse($validated['scheduled_at']) : null,
+            'scheduled_at' => $validated['scheduled_at'] ?? null,
             'is_collaborative' => $request->boolean('is_collaborative'),
-            'created_by' => Auth::id(),
+            'created_by' => Auth::id(), 
         ]);
 
-        return redirect()->route('showTasks')->with('success', 'Task created successfully.');
+        if ($validated['scheduled_at'] && $request->filled('reminder_offset')) 
+        {
+            $reminderOffset = (int) $request->input('reminder_offset');
+
+            $reminder = TaskReminder::create([
+                'task_id' => $task->id,
+                'user_id' => Auth::id(), 
+                'minutes_before' => $reminderOffset,
+                'remind_at' => Carbon::parse($validated['scheduled_at'])->subMinutes($reminderOffset),
+            ]);
+            
+            
+        }   
+
+        return redirect()->route('tasks.show',compact('task'))->with('success', 'Task created with reminder.');
     }
 
     public function edit(Task $task)
@@ -106,7 +124,7 @@ class TaskController extends Controller
             'project_id' => $validated['project_id'] ?? null,
             'stage' => $validated['stage'],
             'priority_level' => $validated['priority_level'],
-            'scheduled_at' => $validated['scheduled_at'] ? \Carbon\Carbon::parse($validated['scheduled_at']) : null,
+            'scheduled_at' => $validated['scheduled_at'] ? Carbon::parse($validated['scheduled_at']) : null,
             'is_collaborative' => $request->boolean('is_collaborative'),
         ]);
 

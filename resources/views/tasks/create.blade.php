@@ -119,18 +119,39 @@
             @enderror
         </div>
 
-        <!-- Scheduled At -->
+        <!-- Scheduled At (with date and time) -->
         <div>
             <label for="scheduled_at" class="block font-medium mb-1">Scheduled At</label>
             <input
-                type="date"
+                type="datetime-local"
                 name="scheduled_at"
                 id="scheduled_at"
-                value="{{ old('scheduled_at') }}"
+                value="{{ old('scheduled_at') ? \Carbon\Carbon::parse(old('scheduled_at'))->format('Y-m-d\TH:i') : '' }}"
                 class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-200
                     @error('scheduled_at') border-red-500 @enderror"
             >
             @error('scheduled_at')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <!-- Reminder -->
+        <div>
+            <label for="reminder_offset" class="block font-medium mb-1">Remind Me</label>
+            <select
+                name="reminder_offset"
+                id="reminder_offset"
+                class="w-full border rounded px-3 py-2 bg-white focus:outline-none focus:ring focus:ring-indigo-200
+                    @error('reminder_offset') border-red-500 @enderror"
+            >
+                <option value="">-- No Reminder --</option>
+                <option value="30" {{ old('reminder_offset') == '30' ? 'selected' : '' }}>30 minutes before</option>
+                <option value="60" {{ old('reminder_offset') == '60' ? 'selected' : '' }}>1 hour before</option>
+                <option value="180" {{ old('reminder_offset') == '180' ? 'selected' : '' }}>3 hours before</option>
+                <option value="1440" {{ old('reminder_offset') == '1440' ? 'selected' : '' }}>1 day before</option>
+                <option value="2880" {{ old('reminder_offset') == '2880' ? 'selected' : '' }}>2 days before</option>
+            </select>
+            @error('reminder_offset')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
             @enderror
         </div>

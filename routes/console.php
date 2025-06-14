@@ -3,6 +3,7 @@
 use App\Models\Notification;
 use App\Models\TaskReminder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -19,6 +20,9 @@ Schedule::call(function () {
 })->weekly();
 
 Schedule::call(function() {
+
+    Log::info('✅ Cron triggered at ' . now());
+    
     Notification::create([
         'user_id' => 1, 
         'task_id' => 1, 

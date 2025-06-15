@@ -62,7 +62,7 @@ export default function Category() {
                 
                 <div class="justify-between flex flex-row bg-gray-200 " style={{padding:'10px'}} >
                     <h2 class="font-semibold text-2xl mb-2 text-center">To-do</h2>                   
-                    <a href="#" onClick={() => setOpened(true)} style={{margin:'5px 0'}}><IconPlus /></a>   
+                    {/* <a href="#" onClick={() => setOpened(true)} style={{margin:'5px 0'}}><IconPlus /></a>    */}
                 </div>
               
                   <Modal 
@@ -104,7 +104,7 @@ export default function Category() {
 
                                     {/* for each loop - project */}
 
-                  <Link href="/Project">
+                  <Link href="/task_view">
                   <div className="group flex w-full h-[40px] items-center text-l justify-between
                                 bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 
                                 group-hover:bg-amber-100 hover:scale-105 hover:text-blue-600 

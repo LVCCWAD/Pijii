@@ -5,6 +5,5 @@
 while [ true ]
     do
         echo "Running the scheduler..."
-        php artisan schedule:run --verbose --no-interaction &
-        sleep 60
+        php artisan schedule:work --verbose --no-interaction 
     done

@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-amber-700">All Projects</h2>
+<div class="container mx-auto px-4 py-10">
+    <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-amber-700">All Projects</h2>
 
-        <!-- Create Project Button -->
         <a href="{{ route('projects.create') }}"
-            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 whitespace-nowrap">
+           class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
             + Create Project
         </a>
     </div>
 
-    <!-- Display Projects grouped by category -->
-    <div class="space-y-10">
+    {{-- Projects grouped by Category --}}
+    <div class="space-y-12">
         @foreach ($categories as $category)
             <div>
-                <h3 class="text-xl font-semibold text-amber-700 mb-4">{{ $category->name }}</h3>
+                <h3 class="text-2xl font-semibold text-amber-700 mb-4">{{ $category->name }}</h3>
 
                 @php
                     $categoryProjects = $projects->where('category_id', $category->id);
@@ -26,10 +26,12 @@
                 @else
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         @foreach ($categoryProjects as $project)
-                            <div class="bg-white shadow-lg rounded-lg p-4">
-                                <h4 class="text-lg font-semibold text-gray-900">{{ $project->project_name }}</h4>
-                                
-                                <p class="text-sm text-gray-600">
+                            <div class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-1">
+                                    {{ $project->project_name }}
+                                </h4>
+
+                                <p class="text-sm text-gray-600 mb-1">
                                     Scheduled at: 
                                     @if ($project->scheduled_at)
                                         {{ $project->scheduled_at->format('Y-m-d H:i') }}
@@ -45,19 +47,19 @@
                                 @if ($project->parent)
                                     <p class="text-xs text-gray-500">
                                         Parent: 
-                                        <a href="{{ route('projects.show', $project->parent->id) }}" class="text-amber-600 hover:text-amber-800">
+                                        <a href="{{ route('projects.show', $project->parent->id) }}" class="text-amber-600 hover:text-amber-800 underline">
                                             {{ $project->parent->project_name }}
                                         </a>
                                     </p>
                                 @endif
 
                                 @if ($project->children && $project->children->count())
-                                    <div class="ml-4 mt-2">
-                                        <strong class="text-sm text-gray-600">Subprojects:</strong>
-                                        <ul class="list-disc pl-4">
+                                    <div class="mt-2">
+                                        <p class="text-sm font-medium text-gray-700">Subprojects:</p>
+                                        <ul class="list-disc pl-5 text-sm text-amber-700">
                                             @foreach ($project->children as $child)
                                                 <li>
-                                                    <a href="{{ route('projects.show', $child->id) }}" class="text-amber-600 hover:text-amber-800">
+                                                    <a href="{{ route('projects.show', $child->id) }}" class="hover:underline">
                                                         {{ $child->project_name }}
                                                     </a>
                                                 </li>
@@ -66,15 +68,16 @@
                                     </div>
                                 @endif
 
-                                <div class="mt-4 flex items-center gap-4">
-                                    <a href="{{ route('projects.show', $project->id) }}" class="text-amber-600 hover:text-amber-800 text-sm">
+                                <div class="mt-4 flex justify-between items-center text-sm">
+                                    <a href="{{ route('projects.show', $project) }}" class="text-amber-600 hover:underline">
                                         View Details
                                     </a>
 
-                                    <form action="{{ route('projects.destroy', $project->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this project?')">
+                                    <form action="{{ route('projects.destroy', $project) }}" method="POST" 
+                                          onsubmit="return confirm('Are you sure you want to delete this project?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm">
+                                        <button type="submit" class="text-red-600 hover:underline">
                                             Delete
                                         </button>
                                     </form>
@@ -86,4 +89,5 @@
             </div>
         @endforeach
     </div>
+</div>
 @endsection

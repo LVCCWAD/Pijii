@@ -15,12 +15,21 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'name' => 'Demo User',
-            'email' => 'amberprincessrosana@student.laverdad.edu.ph',
+            'name' => 'Demo User 1',
+            'email' => 'demouser1@gmail.com',
             'password' => Hash::make('password'),
             'avatar' => 'images/default-avatar.png',
             'email_verified_at' => now()  
         ]);
+
+        User::create([
+            'name' => 'Demo User 2',
+            'email' => 'demouser2@gmail.com',
+            'password' => Hash::make('password'),
+            'avatar' => 'images/default-avatar.png',
+            'email_verified_at' => now()  
+        ]);
+
 
         $categoryId = DB::table('categories')->insertGetId([
             'name' => 'Personal',

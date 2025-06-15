@@ -1,12 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-3xl mx-auto p-6 bg-white rounded shadow">
-    <h1 class="text-2xl font-semibold mb-6">Edit Task</h1>
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">Edit Task</h1>
+
+    <!-- Breadcrumb -->
+    <p class="text-sm text-gray-500 mb-4">
+        <a href="{{ route('categories.show', $task->project->category_id) }}" class="text-indigo-600 hover:underline">
+            {{ $task->project->category->name }}
+        </a>
+        &raquo;
+        <a href="{{ route('projects.show', ['category' => $task->project->category_id, 'project' => $task->project_id]) }}" class="text-indigo-600 hover:underline">
+            {{ $task->project->project_name }}
+        </a>
+    </p>
 
     @if ($errors->any())
-        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-            <ul class="list-disc list-inside">
+        <div class="mb-6 p-4 bg-red-100 text-red-700 rounded">
+            <ul class="list-disc pl-5">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -14,102 +25,119 @@
         </div>
     @endif
 
-    <form action="{{ route('tasks.update', $task) }}" method="POST" class="space-y-6">
+    <form action="{{ route('tasks.update', ['category' => $task->project->category_id, 'project' => $task->project_id, 'task' => $task->id]) }}" method="POST" class="space-y-6 bg-white p-6 rounded shadow">
         @csrf
         @method('PUT')
 
         <!-- Title -->
         <div>
-            <label for="title" class="block font-medium text-gray-700 mb-1">Title <span class="text-red-600">*</span></label>
-            <input type="text" name="title" id="title" 
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value="{{ old('title', $task->title) }}" required maxlength="255" />
+            <label for="title" class="block font-medium mb-1">Title <span class="text-red-600">*</span></label>
+            <input
+                type="text"
+                name="title"
+                id="title"
+                value="{{ old('title', $task->title) }}"
+                required
+                maxlength="255"
+                aria-invalid="{{ $errors->has('title') ? 'true' : 'false' }}"
+                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-200 @error('title') border-red-500 @enderror"
+            >
+            @error('title')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Description -->
         <div>
-            <label for="description" class="block font-medium text-gray-700 mb-1">Description</label>
-            <textarea name="description" id="description" rows="4"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ old('description', $task->description) }}</textarea>
-        </div>
-
-        <!-- Project -->
-        <div>
-            <label for="project_id" class="block font-medium text-gray-700 mb-1">Project</label>
-            <select name="project_id" id="project_id"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">-- Select Project --</option>
-                @foreach ($projects as $project)
-                    <option value="{{ $project->id }}" {{ old('project_id', $task->project_id) == $project->id ? 'selected' : '' }}>
-                        {{ $project->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <!-- Category -->
-        <div>
-            <label for="category_id" class="block font-medium text-gray-700 mb-1">Category</label>
-            <select name="category_id" id="category_id"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">-- Select Category --</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ old('category_id', $task->category_id) == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
+            <label for="description" class="block font-medium mb-1">Description</label>
+            <textarea
+                name="description"
+                id="description"
+                rows="4"
+                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-200 @error('description') border-red-500 @enderror"
+            >{{ old('description', $task->description) }}</textarea>
+            @error('description')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Stage -->
         <div>
-            <label for="stage" class="block font-medium text-gray-700 mb-1">Stage <span class="text-red-600">*</span></label>
-            <select name="stage" id="stage" required
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                @foreach (['to_do', 'in_progress', 'completed', 'on_hold'] as $stageOption)
-                    <option value="{{ $stageOption }}" {{ old('stage', $task->stage) === $stageOption ? 'selected' : '' }}>
-                        {{ ucwords(str_replace('_', ' ', $stageOption)) }}
+            <label for="stage_id" class="block font-medium mb-1">Stage <span class="text-red-600">*</span></label>
+            <select
+                name="stage_id"
+                id="stage_id"
+                required
+                aria-invalid="{{ $errors->has('stage_id') ? 'true' : 'false' }}"
+                class="w-full border rounded px-3 py-2 bg-white focus:outline-none focus:ring focus:ring-indigo-200 @error('stage_id') border-red-500 @enderror"
+            >
+                <option value="" disabled {{ old('stage_id', $task->stage_id) ? '' : 'selected' }}>-- Select Stage --</option>
+                @foreach ($stages as $stage)
+                    <option value="{{ $stage->id }}" {{ old('stage_id', $task->stage_id) == $stage->id ? 'selected' : '' }}>
+                        {{ ucfirst(str_replace('_', ' ', $stage->stage_name)) }}
                     </option>
                 @endforeach
             </select>
+            @error('stage_id')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Priority Level -->
         <div>
-            <label for="priority_level" class="block font-medium text-gray-700 mb-1">Priority Level <span class="text-red-600">*</span></label>
-            <select name="priority_level" id="priority_level" required
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                @foreach (['low', 'medium', 'high'] as $priority)
-                    <option value="{{ $priority }}" {{ old('priority_level', $task->priority_level) === $priority ? 'selected' : '' }}>
-                        {{ ucfirst($priority) }}
+            <label for="priority_level" class="block font-medium mb-1">Priority Level <span class="text-red-600">*</span></label>
+            <select
+                name="priority_level"
+                id="priority_level"
+                required
+                aria-invalid="{{ $errors->has('priority_level') ? 'true' : 'false' }}"
+                class="w-full border rounded px-3 py-2 bg-white focus:outline-none focus:ring focus:ring-indigo-200 @error('priority_level') border-red-500 @enderror"
+            >
+                @foreach (['low', 'medium', 'high'] as $level)
+                    <option value="{{ $level }}" {{ old('priority_level', $task->priority_level) === $level ? 'selected' : '' }}>
+                        {{ ucfirst($level) }}
                     </option>
                 @endforeach
             </select>
+            @error('priority_level')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Scheduled At -->
         <div>
-            <label for="scheduled_at" class="block font-medium text-gray-700 mb-1">Scheduled At</label>
-            <input type="date" name="scheduled_at" id="scheduled_at"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value="{{ old('scheduled_at', optional($task->scheduled_at)->format('Y-m-d')) }}" />
+            <label for="scheduled_at" class="block font-medium mb-1">Scheduled At</label>
+            <input
+                type="datetime-local"
+                name="scheduled_at"
+                id="scheduled_at"
+                value="{{ old('scheduled_at', optional($task->scheduled_at)->format('Y-m-d\TH:i')) }}"
+                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-200 @error('scheduled_at') border-red-500 @enderror"
+            >
+            @error('scheduled_at')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Is Collaborative -->
         <div class="flex items-center space-x-2">
-            <input type="checkbox" name="is_collaborative" id="is_collaborative" value="1" 
+            <input
+                type="checkbox"
+                name="is_collaborative"
+                id="is_collaborative"
+                value="1"
                 {{ old('is_collaborative', $task->is_collaborative) ? 'checked' : '' }}
-                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-            <label for="is_collaborative" class="font-medium text-gray-700">Is Collaborative</label>
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-500 rounded"
+            >
+            <label for="is_collaborative" class="font-medium select-none">Is Collaborative</label>
         </div>
 
-        <!-- Submit Button -->
-        <div>
-            <button type="submit"
-                class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded hover:bg-indigo-700 transition">
+        <!-- Submit Buttons -->
+        <div class="flex items-center space-x-4">
+            <button type="submit" class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded hover:bg-indigo-700 transition">
                 Update Task
             </button>
-            <a href="{{ route('showTasks') }}" class="ml-4 text-gray-600 hover:text-gray-900">Cancel</a>
+            <a href="{{ route('tasks.show', ['category' => $task->project->category_id, 'project' => $task->project_id, 'task' => $task->id]) }}" class="text-gray-600 hover:text-gray-900">Cancel</a>
         </div>
     </form>
 </div>

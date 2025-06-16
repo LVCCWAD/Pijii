@@ -5,6 +5,7 @@ use App\Models\Notification;
 use App\Models\TaskReminder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Events\EntityActionOccurred;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -38,8 +39,8 @@ Schedule::call(function() {
     Log::info('✅ Cron triggered at ' . now());
     
     Notification::create([
-        'user_id' => 1, 
-        'task_id' => 1, 
+        'user_id' => 2, 
+        'task_id' => 12, 
         'message' => 'This is a test notification',
         'is_read' => false,
         'notified_at' => now(),
@@ -63,7 +64,12 @@ Schedule::call(function () {
         ]);
 
         $reminder->update(['notified_at' => now()]);
-    }
 
-    Log::info('🔔 Task reminders checked at ' . $now->toDateTimeString());
+        event(new EntityActionOccurred(
+            userId: $reminder->user_id,
+            entityType: 'TaskReminder',
+            entityId: $reminder->id,
+            action: 'Sent notification for task reminder'
+        ));
+    }
 })->everyMinute();

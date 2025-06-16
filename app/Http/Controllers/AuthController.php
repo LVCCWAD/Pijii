@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
 use App\Models\User;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -29,8 +30,17 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
-        
+
+        event(new EntityActionOccurred(
+            userId: $user->id,
+            entityType: 'User',
+            entityId: $user->id,
+            action: 'User registered'
+        ));
+
         event(new Registered($user));
+        
+
 
         Auth::login($user);
     
@@ -54,6 +64,13 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) 
         {
             Auth::login($user);
+
+            event(new EntityActionOccurred(
+                userId: $user->id,
+                entityType: 'User',
+                entityId: $user->id,
+                action: 'User logged in'
+            ));
 
             return redirect()->intended(route('dashboard'))->with('success', "Welcome back!");
         }
@@ -83,7 +100,15 @@ class AuthController extends Controller
 
     public function logout()
     {
+        $userId = Auth::id();
         Auth::logout();
+
+        event(new EntityActionOccurred(
+            userId: $userId,
+            entityType: 'User',
+            entityId: $userId,
+            action: 'User logged out'
+        ));
 
         return redirect()->route('login');
     }

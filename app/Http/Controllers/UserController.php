@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -53,13 +54,30 @@ class UserController extends Controller
         }
 
         $user->update($data);
-                return redirect()->route('user.show')->with('status', 'Profile updated.');
+
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'User',
+            $user->id,
+            'updated profile'
+        );
+
+        return redirect()->route('user.show')->with('status', 'Profile updated.');
     }
 
     public function destroy()
     {
         $userId = Auth::id();   
+        
         Auth::logout();
+
+        EntityActionOccurred::dispatch(
+            $userId,
+            'User',
+            $userId,
+            'deleted account'
+        );
+
         User::destroy($userId);
 
         return redirect('/login')->with('status', value: 'Account deleted.');

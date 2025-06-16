@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Stage;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Events\EntityActionOccurred;
@@ -36,9 +38,7 @@ class CategoryController extends Controller
             'created'
         );
 
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Category created successfully.');
+        return redirect()->route('dashboard')->with('success', 'Category created successfully.');
     }
 
     public function show(Category $category)
@@ -47,16 +47,19 @@ class CategoryController extends Controller
 
         $projects = $category->projects()
             ->where('created_by', Auth::id())
+            ->with('stage', 'tasks')
             ->get();
 
-        return view('categories.show', compact('category', 'projects'));
+        $stages = Stage::all();
+
+        return inertia('Category_view', compact('category', 'projects', 'stages'));
     }
 
     public function edit(Category $category)
     {
         abort_unless($category->user_id === Auth::id(), 403);
 
-        return view('categories.edit', compact('category'));
+        return inertia('Pages/Edit/Category', compact('category'));
     }
 
     public function update(Request $request, Category $category)
@@ -77,7 +80,7 @@ class CategoryController extends Controller
         );
 
         return redirect()
-            ->route('categories.index')
+            ->back()
             ->with('success', 'Category updated successfully.');
     }
 
@@ -101,7 +104,7 @@ class CategoryController extends Controller
             'deleted'
         );
         return redirect()
-            ->route('categories.index')
+            ->route('dashboard')
             ->with('success', 'Category deleted successfully.');
     }
 }

@@ -1,246 +1,193 @@
-import {NavbarMinimalColored} from "../layouts/mantine/sidebar.jsx";
-import PijiHeader from "../layouts/components/Header.jsx";
-import PijiHeader2 from "../layouts/components/Header2.jsx";
-import {IconCalendarPlus, IconPlus, IconPencil, IconEdit} from '@tabler/icons-react'
-import { Link } from '@inertiajs/react';
-
-import { Modal, Button } from '@mantine/core';
 import { useState } from 'react';
+import { Link, usePage } from '@inertiajs/react';
+import { Modal, Tooltip } from '@mantine/core';
+import { IconEdit, IconPlus, IconPencil, IconCheck } from '@tabler/icons-react';
+
+import { NavbarMinimalColored } from '../layouts/mantine/sidebar.jsx';
+import PijiHeader from "../layouts/components/Header.jsx";
 import CreateProjectForm from '../Pages/Create/Project.jsx';
+import EditCategoryForm from '../Pages/Edit/Category.jsx';
 
 export default function Category() {
-    const [opened, setOpened] = useState(false);
+  const { category, projects, stages, success } = usePage().props;
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedStageId, setSelectedStageId] = useState(null);
+
+  const stageNameToId = {};
+  stages.forEach((s) => (stageNameToId[s.stage_name] = s.id));
+
+  const openFormWithStage = (stageKey) => {
+    const id = stageNameToId[stageKey] || null;
+    setSelectedStageId(id);
+    setCreateModalOpen(true);
+  };
+
+  const grouped = {};
+  stages.forEach(stage => {
+    grouped[stage.stage_name] = [];
+  });
+
+  projects.forEach(project => {
+    const stageKey = project.stage?.stage_name;
+    if (stageKey && grouped[stageKey]) {
+      grouped[stageKey].push(project);
+    }
+  });
+
+  const stageConfigs = {
+    to_do:        { label: "To-do",       bg: "bg-gray-100",    head: "bg-gray-200" },
+    in_progress:  { label: "In Progress", bg: "bg-yellow-100",  head: "bg-amber-200" },
+    completed:    { label: "Completed",   bg: "bg-green-100",   head: "bg-green-200" },
+    on_hold:      { label: "On-hold",     bg: "bg-red-100",     head: "bg-red-200" }
+  };
 
   return (
-    <div class="piji-green">
-    <div className="flex flex-row w-full">
-      <NavbarMinimalColored/>
+    <div className="piji-green h-screen flex overflow-hidden">
+      <div className="flex flex-row w-full">
+        <NavbarMinimalColored />
+        <div className="flex flex-col w-full overflow-y-auto">
+          <PijiHeader />
+          <div className="p-4">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex gap-4 items-center flex-wrap">
+                <div className="flex gap-2 items-center">
+                  <h1 className="text-3xl font-bold">Category: {category.name}</h1>
+                  <Tooltip label="Edit Category" position="bottom">
+                    <button onClick={() => setEditModalOpen(true)}>
+                      <IconEdit className="hover:text-amber-600 transition" />
+                    </button>
+                  </Tooltip>
+                </div>
 
-        <div class="flex flex-col w-full" >
-            <PijiHeader/> 
-            <PijiHeader2 title="Category"/>
+                {success && (
+                  <div className="flex items-center gap-2 bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-md border border-green-300 shadow-sm">
+                    <IconCheck size={16} className="text-green-700" />
+                    <span>{success}</span>
+                  </div>
+                )}
+              </div>
 
+              <button
+                onClick={() => openFormWithStage('to_do')}
+                className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-xl shadow hover:bg-amber-100 hover:text-amber-600 transition"
+              >
+                <IconPlus size={20} />
+                <span className="text-base font-medium">Create</span>
+              </button>
+            </div>
 
-        <div style={{padding:'15px'}}>
+            {/* Project Columns */}
+            <div className="grid grid-cols-4 gap-2 p-4">
+              {Object.entries(stageConfigs).map(([key, config]) => (
+                <div key={key} className={`${config.bg} rounded-lg shadow overflow-auto`}>
+                  <div className={`justify-between flex flex-row ${config.head} p-2`}>
+                    <h2 className="font-semibold text-2xl">{config.label}</h2>
+                    <Tooltip label={`Add project to ${config.label}`}>
+                      <button onClick={() => openFormWithStage(key)}>
+                        <IconPlus size={20} />
+                      </button>
+                    </Tooltip>
+                  </div>
 
-        {/* Category Header ==================================================================== */}
-        <div className="flex items-center justify-between">
-          <div className="flex gap-1">
-            <h1 className="text-3xl font-bold">Category Name</h1> 
+                  <div className="flex flex-col gap-2 p-3">
+                    {(grouped[key] || []).length === 0 ? (
+                      <p className="text-sm text-gray-500 italic p-2">No projects here yet.</p>
+                    ) : (
+                      grouped[key].map(project => {
+                        const totalTasks = project.tasks?.length || 0;
+                        const completedTasks = project.tasks?.filter(t => t.status === 'completed').length || 0;
+                        const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+                        const scheduledDate = project.scheduled_at
+                          ? new Date(project.scheduled_at).toLocaleDateString(undefined, {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })
+                          : "No date";
 
-           <Link href="/category edit"><IconEdit style={{margin:'5px 0'}} /></Link> 
+                        return (
+                          <Link key={project.id} href={`/categories/${category.id}/projects/${project.id}`}>
+                            <div className="group flex flex-col gap-1 bg-amber-50 rounded-xl shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-blue-600 active:scale-95 active:bg-amber-200 p-3">
+                              <div className="flex justify-between items-center">
+                                <p className="font-semibold text-md">{project.project_name || 'Untitled'}</p>
+                                <div className="opacity-0 group-hover:opacity-100 transition-all duration-200">
+                                  <Tooltip label="Edit project">
+                                    <IconPencil size={18} />
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <p className="text-xs text-gray-600">📅 {scheduledDate}</p>
+                              <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div
+                                  className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${progress}%` }}
+                                ></div>
+                              </div>
+                              <p className="text-xs text-gray-500 mt-1">{progress}% complete</p>
+                            </div>
+                          </Link>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-
-            <a onClick={() => setOpened(true)}
-              className="flex w-[140px] h-[50px] justify-center items-center text-xl
-              bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 
-              hover:bg-amber-100 hover:scale-105 hover:text-amber-600 
-              active:scale-95 active:bg-amber-200 cursor-pointer">
-                Create +
-            </a>
-
-          </div>  
-
-
-          {/* To-do | In progress | Completed | On-hold ======================== */}
-          
-          <div class="grid grid-cols-4 gap-2 p-4" style={{padding:'10px'}}> 
-
-              <div class="bg-gray-100 rounded-lg shadow overflow-auto" >
-                
-                <div class="justify-between flex flex-row bg-gray-200 " style={{padding:'10px'}} >
-                    <h2 class="font-semibold text-2xl mb-2 text-center">To-do</h2>                   
-                    <a href="#" onClick={() => setOpened(true)} style={{margin:'5px 0'}}><IconPlus /></a>   
-                </div>
-              
-                  <Modal 
-                      opened={opened}
-                      onClose={() => setOpened(false)}
-                      title={
-                        <div className=" text-2xl font-semibold">
-                          Create New Project
-                        </div>}
-                      centered
-                      size="auto"
-                      overlayProps={{
-                        backgroundOpacity: 0.40,
-                        blur: 1,
-                      }}
-
-                      styles={{
-              
-                        header:{
-                              position: 'relative',
-                          justifyContent: 'center',
-                          backgroundColor: "#fce4b3"
-                        },
-
-                      content: {
-                          width: '100%',
-                          maxWidth: '100%',
-                          height: '100%',
-                          maxHeight: '100%',
-                          backgroundColor: '#fff5e1',
-                      }}}
-                    >        
-                     <CreateProjectForm/>
-                  </Modal>
-
-
-                  {/* project container */}
-                <div class="flex flex-col gap-1" style={{padding:'10px'}}>
-
-                                    {/* for each loop - project */}
-
-                  <Link href="/Project">
-                  <div className="group flex w-full h-[40px] items-center text-l justify-between
-                                bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 
-                                group-hover:bg-amber-100 hover:scale-105 hover:text-blue-600 
-                                active:scale-95 active:bg-amber-200 " style={{padding:'10px'}} >
-                    <p>project item 1 </p>
-                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 "><IconPencil/></div>
-                  </div>
-                  </Link>
-
-    
-                </div>
-
-
-              </div>
-
-              <div class="bg-yellow-100 rounded-lg shadow overflow-auto" >
-             
-                <div class="justify-between flex flex-row bg-amber-200 " style={{padding:'10px'}} >
-                    <h2 class="font-semibold text-2xl mb-2 text-center">In Progress</h2>                   
-                    <a href="#" onClick={() => setOpened(true)} style={{margin:'5px 0'}}><IconPlus /></a>   
-                </div>
-             
-
-                  {/* project container */}
-                <div class="flex flex-col gap-1" style={{padding:'10px'}}>
-
-                                    {/* for each loop - project */}
-
-                  <Link href="/Project">
-                  <div className="group flex w-full h-[40px] items-center text-l justify-between
-                                bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 
-                                group-hover:bg-amber-100 hover:scale-105 hover:text-blue-600 
-                                active:scale-95 active:bg-amber-200 " style={{padding:'10px'}} >
-                    <p>project item 1 </p>
-                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 "><IconPencil/></div>
-                  </div>
-                  </Link>
-
-    
-                </div>
-
-              </div>
-
-              <div class="bg-green-100 rounded-lg shadow overflow-auto" >
-
-                <div class="justify-between flex flex-row bg-green-200 " style={{padding:'10px'}} >
-                    <h2 class="font-semibold text-2xl mb-2 text-center">Completed</h2>                   
-                    <a href="#" onClick={() => setOpened(true)} style={{margin:'5px 0'}}><IconPlus /></a>   
-                </div>
-                
-                             {/* project container */}
-                <div class="flex flex-col gap-1" style={{padding:'10px'}}>
-
-                                    {/* for each loop - project */}
-
-                  <Link href="/Project">
-                  <div className="group flex w-full h-[40px] items-center text-l justify-between
-                                bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 
-                                group-hover:bg-amber-100 hover:scale-105 hover:text-blue-600 
-                                active:scale-95 active:bg-amber-200 " style={{padding:'10px'}} >
-                    <p>project item 1 </p>
-                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 "><IconPencil/></div>
-                  </div>
-                  </Link>
-
-    
-                </div>
-
-              </div>
-
-              <div class="bg-red-100 rounded-lg shadow overflow-auto ">
-
-                <div class="justify-between flex flex-row bg-red-200 " style={{padding:'10px'}} >
-                    <h2 class="font-semibold text-2xl mb-2 text-center">On-hold</h2>                   
-                    <a href="#" onClick={() => setOpened(true)} style={{margin:'5px 0'}}><IconPlus /></a>   
-                </div>
-
-                  {/* project container */}
-                <div class="flex flex-col gap-1" style={{padding:'10px'}}>
-
-                                    {/* for each loop - project */}
-
-                  <Link href="/Project">
-                  <div className="group flex w-full h-[40px] items-center text-l justify-between
-                                bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 
-                                group-hover:bg-amber-100 hover:scale-105 hover:text-blue-600 
-                                active:scale-95 active:bg-amber-200 " style={{padding:'10px'}} >
-                    <p>project item 1 </p>
-                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 "><IconPencil/></div>
-                  </div>
-                  </Link>
-                  <Link href="/Project">
-                  <div className="group flex w-full h-[40px] items-center text-l justify-between
-                                bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 
-                                group-hover:bg-amber-100 hover:scale-105 hover:text-blue-600 
-                                active:scale-95 active:bg-amber-200 " style={{padding:'10px'}} >
-                    <p>project item 1 </p>
-                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 "><IconPencil/></div>
-                  </div>
-                  </Link>
-    
-                </div>
-              </div>
-          </div>
-
-
         </div>
+      </div>
 
-        </div>
-    </div>
-
-
-          <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        title={
-          <div className=" text-2xl font-semibold">
-            Create New Project
-          </div>}
+      {/* Create Project Modal */}
+      <Modal
+        opened={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+        title={<div className="text-2xl font-semibold">Create New Project</div>}
         centered
-        size="auto"
-        overlayProps={{
-          backgroundOpacity: 0.40,
-          blur: 1,
-        }}
-
+        size="lg"
+        overlayProps={{ backgroundOpacity: 0.40, blur: 1 }}
         styles={{
- 
-          header:{
-                 position: 'relative',
-            justifyContent: 'center',
-            backgroundColor: "#fce4b3"
-          },
-
-        content: {
+          header: { justifyContent: 'center', backgroundColor: "#fce4b3" },
+          content: {
             width: '100%',
-            maxWidth: '100%',
-            height: '100%',
-            maxHeight: '100%',
+            maxWidth: '700px',
+            height: 'auto',
+            maxHeight: '90vh',
             backgroundColor: '#fff5e1',
-        }}}
+          }
+        }}
       >
-        Modal content goes here
-        
-        <CreateProjectForm/>
+        <CreateProjectForm
+          categories={[category]}
+          stages={stages}
+          defaultCategoryId={category.id}
+          defaultStageId={selectedStageId}
+        />
       </Modal>
 
-  </div>
+      {/* Edit Category Modal */}
+      <Modal
+        opened={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        title={<div className="text-2xl font-semibold">Edit Category</div>}
+        centered
+        size="md"
+        overlayProps={{ backgroundOpacity: 0.40, blur: 1 }}
+        styles={{
+          header: { justifyContent: 'center', backgroundColor: "#bbf7d0" },
+          content: {
+            width: '100%',
+            maxWidth: '600px',
+            height: 'auto',
+            maxHeight: '90vh',
+            backgroundColor: '#fff7ed',
+          }
+        }}
+      >
+        <EditCategoryForm category={category} onClose={() => setEditModalOpen(false)} />
+      </Modal>
+    </div>
   );
 }
 

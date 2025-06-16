@@ -12,7 +12,7 @@ export default function Layout({children}){
             </nav>
         </header> */}
 
-        <main>
+        <main className="">
             {children}
         </main>
 

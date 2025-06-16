@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Stage;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Events\EntityActionOccurred;

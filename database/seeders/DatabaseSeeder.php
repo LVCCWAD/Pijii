@@ -42,7 +42,42 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Category::create([
+            'name' => 'School',
+            'user_id' => $user->id
+        ]);
+
+        Category::create([
+            'name' => 'School',
+            'user_id' => $user->id
+        ]);
+
+        Category::create([
+            'name' => 'School',
+            'user_id' => $user->id
+        ]);
+
+        Category::create([
+            'name' => 'School',
+            'user_id' => $user->id
+        ]);
+
+        Category::create([
             'name' => 'Work',
+            'user_id' => $user->id
+        ]);
+
+        Category::create([
+            'name' => 'Woasfdrk',
+            'user_id' => $user->id
+        ]);
+
+        Category::create([
+            'name' => 'Woafdrk',
+            'user_id' => $user->id
+        ]);
+
+        Category::create([
+            'name' => 'Worasdfk',
             'user_id' => $user->id
         ]);
 
@@ -79,10 +114,43 @@ class DatabaseSeeder extends Seeder
             'parent_id' => 1,
             'category_id' => $categoryId,
             'stage_id' => 1,  
+            'project_name' => 'asdfasdf',
+            'priority_level' => 'high',
+            'scheduled_at' => now(),
+            'is_collaborative' => true,
+            'created_by' => $user->id,
+        ]);
+
+        Project::create([
+            'parent_id' => 1,
+            'category_id' => $categoryId,
+            'stage_id' => 1,  
             'project_name' => 'Reporting',
             'priority_level' => 'high',
             'scheduled_at' => now(),
             'is_collaborative' => true,
+            'created_by' => $user->id,
+        ]);
+
+        Project::create([
+            'parent_id' => 1,
+            'category_id' => $categoryId,
+            'stage_id' => 1,  
+            'project_name' => 'Reportiasdfng',
+            'priority_level' => 'high',
+            'scheduled_at' => now(),
+            'is_collaborative' => true,
+            'created_by' => $user->id,
+        ]);
+
+        Project::create([
+            'parent_id' => 1,
+            'category_id' => $categoryId,
+            'stage_id' => 1,  
+            'project_name' => 'Reporting',
+            'priority_level' => 'high',
+            'scheduled_at' => now(),
+            'is_collaborative' => false,
             'created_by' => $user->id,
         ]);
 

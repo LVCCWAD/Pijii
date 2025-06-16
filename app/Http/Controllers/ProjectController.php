@@ -49,7 +49,7 @@ class ProjectController extends Controller
             'created'
         );
 
-        return redirect()->route('categories.show', ['category' => $category, 'project_id' => $project->id])
+        return redirect()->inertia('Create/Project', ['category' => $category, 'project_id' => $project->id])
             ->with('success', 'Project created successfully.');
     }
 
@@ -72,7 +72,7 @@ class ProjectController extends Controller
         $getAncestors = app('get_project_ancestors');
         $ancestors = $getAncestors($project->parent);
 
-        return view('projects.show', compact('project', 'ancestors'));
+        return inertia('Project_view', compact('project', 'ancestors'));
     }
 
     public function edit(Category $category, Project $project)

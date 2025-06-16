@@ -58,7 +58,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/categories/{category}/projects/{project}/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::get('/categories/{category}/projects/{project}/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
     Route::put('/categories/{category}/projects/{project}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
-    Route::delete('/categories/{category}/projects/{project}/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::delete('/categories/{category}/projects/{project}/tasks/{task}', action: [TaskController::class, 'destroy'])->name('tasks.destroy');
 
     // User Profile
     Route::get('/profile', [UserController::class, 'show'])->name('user.show');

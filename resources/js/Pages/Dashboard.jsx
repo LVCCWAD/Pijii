@@ -1,167 +1,128 @@
-import {NavbarMinimalColored} from "../layouts/mantine/sidebar.jsx";
+import { NavbarMinimalColored } from "../layouts/mantine/sidebar.jsx";
 import Layout from '../layouts/Layout';
 import PijiHeader from "../layouts/components/Header.jsx";
 import PijiHeader2 from "../layouts/components/Header2.jsx";
 import ProjectCard from "../layouts/components/Project_Card.jsx";
-import PijiCard from "../layouts/components/Task_Card.jsx";
+import {
+  IconCalendarPlus,
+  IconFlag,
+  IconMessageCircleQuestion,
+  IconUsers,
+  IconX,
+  IconBell,
+  IconCategory,
+} from '@tabler/icons-react';
+import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
-import {IconCalendarPlus, IconFlag, IconMessageCircleQuestion, IconUsers, IconX, IconBell, IconCategory} from '@tabler/icons-react';
-import { Link } from '@inertiajs/react';
-import { usePage } from '@inertiajs/react';
-
-
-
 export default function Dashboard() {
-      const { user } = usePage().props;
-       const [showNotif, setShowNotif] = useState(true);
+  const { user, categories } = usePage().props;
+  const [showNotif, setShowNotif] = useState(true);
 
   return (
+    <div className="piji-green flex w-screen h-screen bg-amber-50 overflow-hidden">
+      <NavbarMinimalColored />
 
-    <div className="piji-green flex flex-col w-screen h-screen bg-amber-50">
+      <div className="flex flex-col flex-1 h-full overflow-y-auto">
+        <PijiHeader />
+        <PijiHeader2 title="Dashboard" />
 
-        <div className="flex flex-row w-full h-full ">
-            <NavbarMinimalColored/>
+        <div className="flex flex-row gap-4 px-4 py-4">
+          {/* Left Section */}
+          <div className="relative bg-white flex flex-row flex-1 max-w-[80%] h-[270px] rounded-3xl drop-shadow-md px-6 py-4 overflow-visible">
+            <div className="flex flex-col gap-5 z-10 pr-[330px]">
+              <div className="flex flex-col">
+                <h1 className="text-3xl font-extrabold">Hi, {user.name}</h1>
+                <p className="text-2xl font-semibold">
+                  What are we doing <br />
+                  today?
+                </p>
+              </div>
 
-            {/* Dashboard Content Container */}
-            <div className="flex flex-col w-full h-full">
-                <PijiHeader/> 
-                <PijiHeader2 title="Dashboard"/>
-
-                {/* upper content */}
-                <div className="flex flex-row gap-4" style={{padding:"15px"}}>
-
-                    {/* Piji box */}
-                    <div style={{ padding:"25px 20px "}} className="bg-white flex flex-row flex-1 max-w-[70%] h-[280px] rounded-3xl drop-shadow-md space-between" >
-                        <div className="flex flex-col gap-7">
-                                    <div className="flex flex-col">
-                                        <h1 className="text-3xl font-extrabold"> Hi, {user.name}</h1>
-                                        <p className="text-2xl font-semibold">
-                                            What are we doing <br />
-                                            today?
-                                        </p>
-                                </div>
-                                
-                                {/* Box 1 */}
-                                <div className="flex flex-row">
-                                    <div className="grid grid-cols-2 w-[400px]">
-                                        <Link className="flex items-center gap-1" style={{marginTop:"-20px"}} ><IconCalendarPlus size={24} color="royalblue"> </IconCalendarPlus>Check Calendar </Link>
-                                        <Link className="flex gap-1" ><IconUsers size={24} color="green"> </IconUsers>Check Collaboration projects</Link>
-                                        <Link className="flex items-center gap-1" style={{marginTop:"20px"}} ><IconFlag size={24} color="darkorange"> </IconFlag>Check Urgent Tasks</Link>
-                                        <Link className="flex items-center gap-1" style={{marginTop:"20px"}}><IconMessageCircleQuestion size={24}> </IconMessageCircleQuestion>Ask Piji</Link>
-                                    </div>                 
-                                </div> 
-                        </div>    
-
-                        <div style={{margin:"-150px 0 0 100px"}}  className="flex object-cover w-[310px] h-[400px] overflow-visible">
-                            <img src="/images/PIJI SPRITE1.png" alt="Sprite" className="w-100% h-100% rounded-lg  object-cover overflow-visible scale-x-[-1]"/>
-                        </div>
-                    </div>
-
-                
-                    {/* notifcations*/}
-                    <div style={{ padding:"20px"}} className=" flex flex-col max-w-[45%] flex-1 h-[280px] rounded-3xl drop-shadow-md bg-white overflow-hidden" >
-                            <Link href="/Notifications">
-                                <div class="flex flex-row gap-4">
-                                    <div style={{ margin:"6px 0"}}><IconBell size={28} /></div>
-                                    <h1 className="text-4xl font-bold"> Notifications</h1>
-                                </div>
-                            </Link>
-
-                    {/* insert foreach loop -  bg-gray-100*/}
-
-                        {/* <div>
-                            {showNotif && (
-                                
-                                <div style={{ margin: '5px 0', padding: '25px 20px' }} className="bg-blue-300 flex flex-row items-center w-full h-[60px] rounded-2xl drop-shadow-md justify-between transition-all duration-200 ">
-                                Notification 1
-                                <a href="#" onClick={() => setShowNotif(false)}><IconX /></a>
-                                </div>
-                            )}
-                        </div> */}
-
-                        {/* notif 1 */}
-                        <div style={{ margin: "5px 0", padding: "25px 20px" }} className="bg-blue-300 flex flex-row items-center  w-full h-[60px] rounded-2xl drop-shadow-md justify-between">
-                        Notification 1
-                        <Link><IconX/></Link>
-                        </div>
-
-
-
-                    </div>
-
+              <div className="flex flex-row">
+                <div className="grid grid-cols-2 w-[400px]">
+                  <Link className="flex items-center gap-1 mt-[-20px]">
+                    <IconCalendarPlus size={24} color="royalblue" /> Check Calendar
+                  </Link>
+                  <Link className="flex gap-1">
+                    <IconUsers size={24} color="green" /> Check Collaboration projects
+                  </Link>
+                  <Link className="flex items-center gap-1 mt-[20px]">
+                    <IconFlag size={24} color="darkorange" /> Check Urgent Tasks
+                  </Link>
+                  <Link className="flex items-center gap-1 mt-[20px]">
+                    <IconMessageCircleQuestion size={24} /> Ask Piji
+                  </Link>
                 </div>
-
-                    {/* Category  */}
-                    <div class="flex flex-col gap-2  rounded-3xl drop-shadow-md bg-white " style={{margin:'0 15px', padding:'10px'}}>
-                        <div class="flex flex-row gap-2 "style={{margin:'0 20px'}}>
-                            <div style={{ margin:"6px 0"}}><IconCategory size={28} /></div>
-                                <h1 className="text-4xl font-bold"> Categories</h1>
-                        </div>
-
-                        <div className="flex flex-row justify-center  gap-7" >
-
-                            <ProjectCard
-                            title="PERSONAL TASKS"
-                            badgeNumber={1}
-                            badgeColor="bg-white"
-                            cardBg="piji-orange-1"
-                            />
-
-                            <ProjectCard
-                            title="SCHOOL TASKS"
-                            badgeNumber={2}
-                            badgeColor="bg-white"
-                            cardBg="piji-cyan-1"
-                            />
-                            <ProjectCard
-                            title="WORK TASKS"
-                            badgeNumber={3}
-                            badgeColor="bg-white"
-                            cardBg="piji-green-1"
-                            />
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
 
-            
-    </div>                   
+            {/* Piji Sprite */}
+            <div className="absolute right-[10px] top-[-127px] w-[360px] h-[400px] z-0 pointer-events-none">
+              <img
+                src="/images/PIJI SPRITE1.png"
+                alt="Sprite"
+                className="w-full h-full object-cover scale-x-[-1]"
+              />
+            </div>
+          </div>
+
+          {/* Notifications */}
+          <div className="flex flex-col max-w-[45%] flex-1 h-[270px] rounded-3xl drop-shadow-md bg-white px-5 py-2">
+            <Link href="/Notifications">
+              <div className="flex flex-row gap-4">
+                <div className="mt-[6px]">
+                  <IconBell size={28} />
+                </div>
+                <h1 className="text-4xl font-bold">Notifications</h1>
+              </div>
+            </Link>
+
+            {showNotif && (
+              <div className="bg-blue-300 flex flex-row items-center justify-between w-full h-[60px] rounded-2xl drop-shadow-md px-5 mt-4">
+                Notification 1
+                <a href="#" onClick={() => setShowNotif(false)}>
+                  <IconX />
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Categories */}
+        <div className="flex flex-col gap-2 rounded-3xl drop-shadow-md bg-white mx-4 px-5 py-2">
+          <div className="flex flex-row gap-2 ml-2">
+            <div className="mt-[6px]">
+              <IconCategory size={28} />
+            </div>
+            <h1 className="text-4xl font-bold">Categories</h1>
+          </div>
+
+          <div className="flex flex-wrap justify-start gap-5 mt-4">
+            {categories.length > 0 ? (
+              categories.map((category, index) => (
+                <ProjectCard
+                  key={category.id}
+                  title={category.name.toUpperCase()}
+                  badgeNumber={category.projects.length}
+                  badgeColor="bg-white"
+                  cardBg={
+                    index % 3 === 0
+                      ? 'piji-orange-1'
+                      : index % 3 === 1
+                      ? 'piji-cyan-1'
+                      : 'piji-green-1'
+                  }
+                />
+              ))
+            ) : (
+              <p className="text-gray-500">You have no categories yet.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
-Dashboard.layout = (page) => <Layout>{page}</Layout>
-
-
-
-
-
-
-
-
-
-
-// import React from 'react';
-// import { router } from '@inertiajs/react';
-
-// function Dashboard() {
-//     function handleLogout(e) {
-//         e.preventDefault();
-//         router.post('/logout');
-//     }
-
-//     return (
-//         <div className="flex flex-col items-center justify-center gap-4 p-6">
-//             <p className="text-gray-500 italic text-center text-sm">Note: This is just a placeholder.</p>
-//             <h1 className="text-2xl font-bold text-center text-purple-700">Welcome to Pijii!</h1>
-//             <button
-//                 className="bg-amber-500 hover:bg-amber-300 text-white font-semibold py-2 px-4 rounded-md transition"
-//                 onClick={handleLogout}
-//             >
-//                 Log out
-//             </button>
-//         </div>
-//     );
-// }
-
-// export default Dashboard;
+Dashboard.layout = (page) => <Layout>{page}</Layout>;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
@@ -93,9 +94,12 @@ class AuthController extends Controller
 
     public function dashboard()
     {
-        return Inertia::render('Dashboard', [
-        'user' => Auth::user(),
-    ]);
+
+        $categories = Category::with('projects')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        return Inertia::render('Dashboard', ['user' => Auth::user(), 'categories' => $categories]);
     }
 
     public function logout()

@@ -16,7 +16,7 @@
 *,
 *::before,
 *::after{
-  @apply m-0 p-0 box-border;
+  @apply box-border;
   font-family: Arial, sans-serif;
 }
 

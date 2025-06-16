@@ -44,19 +44,21 @@ export default function Category() {
 
   return (
     <div className="piji-green h-screen flex overflow-hidden">
-      <div className="flex flex-row w-full">
+      <div className="flex flex-row w-full overflow-hidden">
         <NavbarMinimalColored />
-        <div className="flex flex-col w-full overflow-y-auto">
+        <div className="flex-1 flex flex-col overflow-y-auto">
           <PijiHeader />
-          <div className="p-4">
+          <div className="p-4 md:p-6 xl:p-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex gap-4 items-center flex-wrap">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-wrap gap-4 items-center">
                 <div className="flex gap-2 items-center">
-                  <h1 className="text-3xl font-bold">Category: {category.name}</h1>
+                  <h1 className="text-xl md:text-2xl xl:text-3xl font-bold">
+                    Category: {category.name}
+                  </h1>
                   <Tooltip label="Edit Category" position="bottom">
-                    <button onClick={() => setEditModalOpen(true)}>
-                      <IconEdit className="hover:text-amber-600 transition" />
+                    <button onClick={() => setEditModalOpen(true)} className="cursor-pointer">
+                      <IconEdit className="hover:text-amber-600 transition cursor-pointer" />
                     </button>
                   </Tooltip>
                 </div>
@@ -71,27 +73,27 @@ export default function Category() {
 
               <button
                 onClick={() => openFormWithStage('to_do')}
-                className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-xl shadow hover:bg-amber-100 hover:text-amber-600 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-xl shadow hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer"
               >
-                <IconPlus size={20} />
+                <IconPlus size={20} className="cursor-pointer" />
                 <span className="text-base font-medium">Create</span>
               </button>
             </div>
 
             {/* Project Columns */}
-            <div className="grid grid-cols-4 gap-2 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
               {Object.entries(stageConfigs).map(([key, config]) => (
-                <div key={key} className={`${config.bg} rounded-lg shadow overflow-auto`}>
-                  <div className={`justify-between flex flex-row ${config.head} p-2`}>
-                    <h2 className="font-semibold text-2xl">{config.label}</h2>
+                <div key={key} className={`${config.bg} rounded-lg shadow overflow-hidden flex flex-col`}>
+                  <div className={`flex justify-between items-center ${config.head} p-2`}>
+                    <h2 className="font-semibold text-lg md:text-xl">{config.label}</h2>
                     <Tooltip label={`Add project to ${config.label}`}>
-                      <button onClick={() => openFormWithStage(key)}>
-                        <IconPlus size={20} />
+                      <button onClick={() => openFormWithStage(key)} className="cursor-pointer">
+                        <IconPlus size={20} className="cursor-pointer" />
                       </button>
                     </Tooltip>
                   </div>
 
-                  <div className="flex flex-col gap-2 p-3">
+                  <div className="flex flex-col gap-2 p-3 max-h-[75vh] overflow-y-auto">
                     {(grouped[key] || []).length === 0 ? (
                       <p className="text-sm text-gray-500 italic p-2">No projects here yet.</p>
                     ) : (
@@ -109,12 +111,12 @@ export default function Category() {
 
                         return (
                           <Link key={project.id} href={`/categories/${category.id}/projects/${project.id}`}>
-                            <div className="group flex flex-col gap-1 bg-amber-50 rounded-xl shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-blue-600 active:scale-95 active:bg-amber-200 p-3">
+                            <div className="group flex flex-col gap-1 bg-amber-50 rounded-xl shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-[1.02] hover:text-blue-600 active:scale-95 active:bg-amber-200 p-3 cursor-pointer">
                               <div className="flex justify-between items-center">
                                 <p className="font-semibold text-md">{project.project_name || 'Untitled'}</p>
                                 <div className="opacity-0 group-hover:opacity-100 transition-all duration-200">
                                   <Tooltip label="Edit project">
-                                    <IconPencil size={18} />
+                                    <IconPencil size={18} className="cursor-pointer" />
                                   </Tooltip>
                                 </div>
                               </div>

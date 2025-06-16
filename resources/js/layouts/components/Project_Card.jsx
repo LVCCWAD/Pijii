@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import {
   IconPlus,
   IconTrash,
@@ -54,27 +54,9 @@ export default function ProjectCard({
   function deleteCategory(e) {
     e.preventDefault();
     if (confirm("Are you sure you want to delete this category? This cannot be undone.")) {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = `/categories/${categoryId}`;
-
-      const method = document.createElement("input");
-      method.type = "hidden";
-      method.name = "_method";
-      method.value = "DELETE";
-      form.appendChild(method);
-
-      const token = document.querySelector('meta[name="csrf-token"]')?.content;
-      if (token) {
-        const csrf = document.createElement("input");
-        csrf.type = "hidden";
-        csrf.name = "_token";
-        csrf.value = token;
-        form.appendChild(csrf);
-      }
-
-      document.body.appendChild(form);
-      form.submit();
+      router.delete(`/categories/${categoryId}`, {
+        preserveScroll: true,
+      });
     }
   }
 

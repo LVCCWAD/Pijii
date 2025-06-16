@@ -11,9 +11,9 @@
             </a> 
         @endif
         @foreach ($ancestors as $ancestor)
-            <a href="{{ route('projects.shared.show', $ancestor->id) }}" class="hover:underline">{{ $ancestor->name }}</a> /
+            <a href="{{ route('projects.show', ['category' => $task->project->category->id, 'project' => $task->project->id]) }}" class="hover:underline">{{ $ancestor->name }}</a> /
         @endforeach
-        <a href="{{ route('projects.shared.show', $task->project->id) }}" class="hover:underline">{{ $task->project->project_name }}</a> /
+        <a href="{{ route('projects.show', ['category' => $task->project->category->id, 'project' => $task->project->id]) }}" class="hover:underline">{{ $task->project->project_name }}</a> /
         <span class="font-semibold">{{ $task->title }}</span>
     </nav>
 
@@ -27,7 +27,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div>
             <p><strong>Project:</strong> 
-                <a href="{{ route('projects.shared.show', $task->project->id) }}" class="text-blue-600 hover:underline">
+                <a href="{{ route('projects.show', ['category' => $task->project->category->id, 'project' => $task->project->id]) }}" class="text-blue-600 hover:underline">
                     {{ $task->project->project_name }}
                 </a>
             </p>
@@ -46,12 +46,12 @@
     </div>
 
     <div>
-        <a href="{{ route('tasks.edit', $task->id) }}" 
+        <a href="{{ route('tasks.edit', ['task' => $task, 'category' => $task->project->category->id, 'project' => $task->project->id]) }}" 
            class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
            Edit Task
         </a>
         <a href="{{ route('dashboard') }}" 
-           class="inline-block ml-4 px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">
+           class="inline-block ml-4 px-4 py-2 bg-gray-3 00 text-gray-800 rounded hover:bg-gray-400 transition">
            Back to Tasks
         </a>
     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
@@ -23,10 +24,17 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255|unique:categories,name',
         ]);
 
-        Category::create([
+        $category = Category::create([
             'name' => $validated['name'],
             'user_id' => Auth::id(),
         ]);
+
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Category',
+            $category->id,
+            'created'
+        );
 
         return redirect()
             ->route('categories.index')
@@ -61,6 +69,13 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Category',
+            $category->id,
+            'updated'
+        );
+
         return redirect()
             ->route('categories.index')
             ->with('success', 'Category updated successfully.');
@@ -70,14 +85,21 @@ class CategoryController extends Controller
     {
         abort_unless($category->user_id === Auth::id(), 403);
 
-        // Optional: cascade delete related projects and tasks here if not handled via DB foreign keys
+        $categoryId = $category->id;
+
         foreach ($category->projects as $project) {
-            $project->tasks()->delete(); // if not set to cascade
+            $project->tasks()->delete();
             $project->delete();
         }
 
         $category->delete();
 
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Category',
+            $categoryId,
+            'deleted'
+        );
         return redirect()
             ->route('categories.index')
             ->with('success', 'Category deleted successfully.');

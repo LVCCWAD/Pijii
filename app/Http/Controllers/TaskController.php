@@ -11,13 +11,15 @@ use App\Models\Category;
 use App\Models\TaskReminder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
     public function show(Category $category, Project $project, Task $task)
     {
-        abort_unless($task->created_by === Auth::id() || $task->is_collaborative, 403);
+        Gate::authorize('view', $task);
 
         $task->load([
             'project.stage',
@@ -35,16 +37,16 @@ class TaskController extends Controller
 
     public function create(Category $category, Project $project)
     {
-        abort_unless($project->created_by === Auth::id(), 403);
+        Gate::authorize('create', [Task::class, $project]);
 
         $stages = Stage::all();
-        $users = User::all(); 
+        $users = User::all();
         return view('tasks.create', compact('category', 'project', 'stages', 'users'));
     }
 
     public function store(Request $request, Category $category, Project $project)
     {
-        abort_unless($project->created_by === Auth::id(), 403);
+        Gate::authorize('create', [Task::class, $project]);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -75,13 +77,20 @@ class TaskController extends Controller
             ]);
         }
 
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Task',
+            $task->id,
+            'created'
+        );
+
         return redirect()->route('projects.show', ['category' => $category->id, 'project' => $project->id])
-        ->with('success', 'Task created successfully.');
+            ->with('success', 'Task created successfully.');
     }
 
     public function edit(Category $category, Project $project, Task $task)
     {
-        abort_unless($task->created_by === Auth::id(), 403);
+        Gate::authorize('update', $task);
 
         $stages = Stage::all();
         return view('tasks.edit', compact('task', 'category', 'project', 'stages'));
@@ -89,7 +98,7 @@ class TaskController extends Controller
 
     public function update(Request $request, Category $category, Project $project, Task $task)
     {
-        abort_unless($task->created_by === Auth::id(), 403);
+        Gate::authorize('update', $task);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -109,15 +118,33 @@ class TaskController extends Controller
             'is_collaborative' => $request->boolean('is_collaborative'),
         ]);
 
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Task',
+            $task->id,
+            'updated'
+        );
+
         return redirect()->route('projects.show', ['category' => $category->id, 'project' => $project->id])
-        ->with('success', 'Task updated.');
+            ->with('success', 'Task updated.');
     }
 
     public function destroy(Category $category, Project $project, Task $task)
     {
-        abort_unless($task->created_by === Auth::id(), 403);
+        Gate::authorize('delete', $task);
+
+        $taskId = $task->id;
 
         $task->delete();
-        return redirect()->route('projects.show', ['category' => $category, 'project' => $project, 'task' => $task])->with('success', 'Task deleted.');
+
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Task',
+            $taskId,
+            'deleted'
+        );
+
+        return redirect()->route('projects.show', ['category' => $category, 'project' => $project])
+            ->with('success', 'Task deleted.');
     }
 }

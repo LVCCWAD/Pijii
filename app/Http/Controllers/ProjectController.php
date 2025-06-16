@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Stage;
 use App\Models\Project;
 use App\Models\Category;
-use App\Models\Stage;
 use Illuminate\Http\Request;
+use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
@@ -40,6 +41,13 @@ class ProjectController extends Controller
         $validated['is_collaborative'] = $request->has('is_collaborative');
 
         $project = Project::create($validated);
+
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Project',
+            $project->id,
+            'created'
+        );
 
         return redirect()->route('categories.show', ['category' => $category, 'project_id' => $project->id])
             ->with('success', 'Project created successfully.');
@@ -101,6 +109,13 @@ class ProjectController extends Controller
 
         $project->update($validated);
 
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Project',
+            $project->id,
+            'updated'
+        );
+
         return redirect()->route('projects.show', [
             'category' => $category->id,
             'project' => $project->id,
@@ -111,8 +126,17 @@ class ProjectController extends Controller
     {
         abort_unless($project->created_by === Auth::id(), 403);
 
+        $projectId = $project->id;
+
         $project->tasks()->delete(); 
         $project->delete();
+
+        EntityActionOccurred::dispatch(
+            Auth::id(),
+            'Project',
+            $projectId,
+            'deleted'
+        );
 
         return redirect()->route('categories.show', $project->category_id)
             ->with('success', 'Project deleted successfully.');

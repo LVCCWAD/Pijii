@@ -1,6 +1,7 @@
 import { useForm } from "@inertiajs/react";
 import React, { useState } from "react";
 
+
 export default function CreateProjectForm({
   category = {},
   selectedStage = {},
@@ -14,7 +15,9 @@ export default function CreateProjectForm({
     { id: 4, label: "On Hold", value: "on_hold" },
   ];
 
+
   const [submitError, setSubmitError] = useState("");
+
 
   const { data, setData, post, processing, errors, reset } = useForm({
     project_name: "",
@@ -25,18 +28,22 @@ export default function CreateProjectForm({
     scheduled_at: "",
   });
 
+
   const handleChange = (e) => {
     setData(e.target.name, e.target.value);
     setSubmitError(""); // clear error on change
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
 
     if (!category?.id || !data.stage_id) {
       setSubmitError("Please select a category and a stage.");
       return;
     }
+
 
     post(`/categories/${category.id}/projects`, {
       onSuccess: () => {
@@ -50,9 +57,11 @@ export default function CreateProjectForm({
     });
   };
 
+
   return (
     <div className="max-w-3xl mx-auto p-4">
       <form onSubmit={handleSubmit} className="space-y-6">
+
 
         {/* Top Error Banner */}
         {submitError && (
@@ -60,6 +69,7 @@ export default function CreateProjectForm({
             <strong className="font-semibold">Error:</strong> {submitError}
           </div>
         )}
+
 
         {/* Project Name */}
         <div>
@@ -79,6 +89,7 @@ export default function CreateProjectForm({
           )}
         </div>
 
+
         {/* Category Display */}
         <div>
           <label className="block text-sm font-medium text-gray-700">Category</label>
@@ -86,6 +97,7 @@ export default function CreateProjectForm({
             {category?.name || "Unknown Category"}
           </div>
         </div>
+
 
         {/* Stage Select */}
         <div>
@@ -111,6 +123,7 @@ export default function CreateProjectForm({
           )}
         </div>
 
+
         {/* Parent Project (optional) */}
         {parentProject && (
           <div>
@@ -120,6 +133,7 @@ export default function CreateProjectForm({
             </div>
           </div>
         )}
+
 
         {/* Priority Level */}
         <div>
@@ -136,17 +150,19 @@ export default function CreateProjectForm({
           </select>
         </div>
 
+
         {/* Scheduled Date */}
         <div>
           <label className="block text-sm font-medium text-gray-700">Scheduled Date</label>
           <input
-            type="date"
+            type="datetime-local"
             name="scheduled_at"
             value={data.scheduled_at}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
           />
         </div>
+
 
         {/* Submit */}
         <div className="text-right">
@@ -162,3 +178,6 @@ export default function CreateProjectForm({
     </div>
   );
 }
+
+
+

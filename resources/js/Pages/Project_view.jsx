@@ -1,14 +1,15 @@
-// ✅ FINAL FIXED ProjectView using full CreateTaskForm with all fields and stage tracking
 import { useEffect, useState } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import { Modal, Tooltip } from "@mantine/core";
+
 
 import { NavbarMinimalColored } from "../layouts/mantine/sidebar.jsx";
 import PijiHeader from "../layouts/components/Header.jsx";
 import PijiHeader2 from "../layouts/components/Header2.jsx";
 
+
 import {
-  IconPencil,
+  IconTrash,
   IconChevronCompactRight,
   IconPlus,
   IconEdit,
@@ -16,9 +17,11 @@ import {
   IconChevronRight,
 } from "@tabler/icons-react";
 
+
 import CreateProjectForm from "../Pages/Create/Project.jsx";
 import EditProjectForm from "../Pages/Edit/Project.jsx";
 import CreateTaskForm from "../Pages/Create/Task.jsx";
+
 
 export default function ProjectView() {
   const [openedTaskModal, setOpenedTaskModal] = useState(false);
@@ -28,9 +31,11 @@ export default function ProjectView() {
   const [showSuccess, setShowSuccess] = useState(true);
   const [selectedStageId, setSelectedStageId] = useState(1);
 
+
   const { project, ancestors, subprojects = [], flash } = usePage().props;
   const category = project?.category;
   const tasks = project?.tasks || [];
+
 
   useEffect(() => {
     if (flash?.success) {
@@ -40,12 +45,14 @@ export default function ProjectView() {
     }
   }, [flash?.success]);
 
+
   const stages = [
     { name: "To-do", id: 1, bg: "bg-gray-100", header: "bg-gray-200" },
     { name: "In Progress", id: 2, bg: "bg-yellow-100", header: "bg-amber-200" },
     { name: "Completed", id: 3, bg: "bg-green-100", header: "bg-green-200" },
     { name: "On-hold", id: 4, bg: "bg-red-100", header: "bg-red-200" },
   ];
+
 
   return (
     <div className="piji-green h-screen overflow-hidden">
@@ -55,12 +62,14 @@ export default function ProjectView() {
           <PijiHeader />
           <PijiHeader2 title={`Project: ${project?.project_name || "Untitled"}`} />
 
+
           <div className="flex-1 overflow-y-auto p-4">
             {flash?.success && showSuccess && (
               <div className="mb-4 mx-4 p-3 rounded-lg bg-green-100 text-green-800 border border-green-300 shadow-sm transition-opacity duration-500">
                 {flash.success}
               </div>
             )}
+
 
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <div className="flex gap-1 items-center flex-wrap">
@@ -89,6 +98,7 @@ export default function ProjectView() {
               </div>
             </div>
 
+
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-2xl font-bold flex items-center gap-1">
@@ -113,6 +123,7 @@ export default function ProjectView() {
                 </Tooltip>
               </div>
 
+
               {showSubprojects && (subprojects.length === 0 ? (
                 <p className="text-sm text-gray-500 italic">No subprojects.</p>
               ) : (
@@ -129,6 +140,7 @@ export default function ProjectView() {
                         })
                       : "No date";
 
+
                     return (
                       <Link
                         key={sub.id}
@@ -138,14 +150,6 @@ export default function ProjectView() {
                         <div className="flex flex-col gap-1 bg-amber-50 rounded-xl shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-[1.02] hover:text-blue-600 active:scale-95 active:bg-amber-200 p-3">
                           <div className="flex justify-between items-center">
                             <p className="font-semibold text-md">{sub.project_name || "Untitled"}</p>
-                            <div className="opacity-0 group-hover:opacity-100 transition-all duration-200">
-                              <Tooltip label="Edit subproject">
-                                <IconPencil
-                                  size={18}
-                                  className="text-gray-500 cursor-pointer group-hover:text-amber-600 transition-colors duration-200"
-                                />
-                              </Tooltip>
-                            </div>
                           </div>
                           <p className="text-xs text-gray-600">📅 {scheduledDate}</p>
                           <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
@@ -163,6 +167,7 @@ export default function ProjectView() {
               ))}
             </div>
 
+
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-2xl font-bold">Tasks</h2>
               <Tooltip label="Create a new task">
@@ -177,6 +182,7 @@ export default function ProjectView() {
                 </button>
               </Tooltip>
             </div>
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {stages.map((stage) => (
@@ -197,16 +203,39 @@ export default function ProjectView() {
                   </div>
                   <div className="flex flex-col gap-1 p-2">
                     {tasks.filter((task) => task.stage?.id === stage.id).map((task) => (
-                      <Link key={task.id} href="#" className="group cursor-pointer">
-                        <div className="group flex w-full min-h-[40px] items-center justify-between bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-blue-600 active:scale-95 active:bg-amber-200 px-3 py-2">
-                          <p>{task.task_name}</p>
-                          <div className="opacity-0 group-hover:opacity-100 transition-all duration-200">
-                            <Tooltip label="Edit task">
-                              <IconPencil className="text-gray-500 cursor-pointer group-hover:text-amber-600 transition-colors duration-200" />
-                            </Tooltip>
+                      <div key={task.id} className="group cursor-pointer">
+                        <Link
+                          href={`/categories/${category?.id}/projects/${project.id}/tasks/${task.id}`}
+                          className="flex flex-col w-full min-h-[40px] bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-blue-600 active:scale-95 active:bg-amber-200 px-3 py-2"
+                        >
+                          <div className="flex justify-between items-center">
+                            <p className="font-semibold">{task.task_name}</p>
+                            <div className="opacity-0 group-hover:opacity-100 transition-all duration-200">
+                              <Tooltip label="Delete task">
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    if (confirm("Are you sure you want to delete this task?")) {
+                                      router.delete(`/categories/${category?.id}/projects/${project.id}/tasks/${task.id}`);
+                                    }
+                                  }}
+                                  className="text-gray-500 hover:text-red-600 transition-colors duration-200"
+                                  aria-label="Delete Task"
+                                >
+                                  <IconTrash />
+                                </button>
+                              </Tooltip>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
+                          {task.description && (
+                            <p className="text-xs text-gray-600 truncate">{task.description}</p>
+                          )}
+                          <div className="flex justify-between items-center text-xs text-gray-500 mt-1">
+                            <span>📅 {task.scheduled_at ? new Date(task.scheduled_at).toLocaleDateString() : "No date"}</span>
+                            <span>🏳 {task.priority || "Normal"}</span>
+                          </div>
+                        </Link>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -215,6 +244,7 @@ export default function ProjectView() {
           </div>
         </div>
       </div>
+
 
       <Modal
         opened={openedSubprojectModal}
@@ -225,12 +255,7 @@ export default function ProjectView() {
         overlayProps={{ backgroundOpacity: 0.4, blur: 1 }}
         styles={{
           header: { justifyContent: "center", backgroundColor: "#fce4b3" },
-          content: {
-            maxWidth: "600px",
-            maxHeight: "90vh",
-            backgroundColor: "#fff5e1",
-            overflowY: "auto",
-          },
+          content: { maxWidth: "600px", maxHeight: "90vh", backgroundColor: "#fff5e1", overflowY: "auto" },
         }}
       >
         <CreateProjectForm
@@ -244,6 +269,7 @@ export default function ProjectView() {
         />
       </Modal>
 
+
       <Modal
         opened={openedEditProjectModal}
         onClose={() => setOpenedEditProjectModal(false)}
@@ -253,12 +279,7 @@ export default function ProjectView() {
         overlayProps={{ backgroundOpacity: 0.4, blur: 1 }}
         styles={{
           header: { justifyContent: "center", backgroundColor: "#dbeafe" },
-          content: {
-            maxWidth: "600px",
-            maxHeight: "90vh",
-            backgroundColor: "#eff6ff",
-            overflowY: "auto",
-          },
+          content: { maxWidth: "600px", maxHeight: "90vh", backgroundColor: "#eff6ff", overflowY: "auto" },
         }}
       >
         <EditProjectForm
@@ -271,6 +292,7 @@ export default function ProjectView() {
         />
       </Modal>
 
+
       <Modal
         opened={openedTaskModal}
         onClose={() => setOpenedTaskModal(false)}
@@ -280,12 +302,7 @@ export default function ProjectView() {
         overlayProps={{ backgroundOpacity: 0.4, blur: 1 }}
         styles={{
           header: { justifyContent: "center", backgroundColor: "#fce4b3" },
-          content: {
-            maxWidth: "600px",
-            maxHeight: "90vh",
-            backgroundColor: "#fff5e1",
-            overflowY: "auto",
-          },
+          content: { maxWidth: "600px", maxHeight: "90vh", backgroundColor: "#fff5e1", overflowY: "auto" },
         }}
       >
         <CreateTaskForm
@@ -303,4 +320,8 @@ export default function ProjectView() {
   );
 }
 
+
 ProjectView.layout = (page) => page;
+
+
+

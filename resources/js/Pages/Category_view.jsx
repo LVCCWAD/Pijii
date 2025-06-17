@@ -5,16 +5,14 @@ import {
   IconPlus,
   IconCheck,
   IconPencil,
-  IconChevronCompactRight,
-  IconEdit,
-  IconChevronDown,
-  IconChevronRight,
 } from "@tabler/icons-react";
+
 
 import { NavbarMinimalColored } from '../layouts/mantine/sidebar.jsx';
 import PijiHeader from "../layouts/components/Header.jsx";
 import CreateProjectForm from '../Pages/Create/Project.jsx';
 import EditCategoryForm from '../Pages/Edit/Category.jsx';
+
 
 export default function Category() {
   const { category, projects, stages, success } = usePage().props;
@@ -22,8 +20,10 @@ export default function Category() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedStageId, setSelectedStageId] = useState(null);
 
+
   const stageNameToId = {};
   stages.forEach((s) => (stageNameToId[s.stage_name] = s.id));
+
 
   const openFormWithStage = (stageKey) => {
     const id = stageNameToId[stageKey] || null;
@@ -31,10 +31,13 @@ export default function Category() {
     setCreateModalOpen(true);
   };
 
+
+  // Group projects by their stage_name
   const grouped = {};
   stages.forEach(stage => {
     grouped[stage.stage_name] = [];
   });
+
 
   projects.forEach(project => {
     const stageKey = project.stage?.stage_name;
@@ -43,12 +46,14 @@ export default function Category() {
     }
   });
 
+
   const stageConfigs = {
     to_do:        { label: "To-do",       bg: "bg-gray-100",    head: "bg-gray-200" },
     in_progress:  { label: "In Progress", bg: "bg-yellow-100",  head: "bg-amber-200" },
     completed:    { label: "Completed",   bg: "bg-green-100",   head: "bg-green-200" },
     on_hold:      { label: "On-hold",     bg: "bg-red-100",     head: "bg-red-200" }
   };
+
 
   return (
     <div className="piji-green h-screen flex overflow-hidden">
@@ -77,6 +82,7 @@ export default function Category() {
                   </Tooltip>
                 </div>
 
+
                 {success && (
                   <div className="flex items-center gap-2 bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-md border border-green-300 shadow-sm">
                     <IconCheck size={16} className="text-green-700 cursor-pointer" />
@@ -84,6 +90,7 @@ export default function Category() {
                   </div>
                 )}
               </div>
+
 
               <button
                 onClick={() => openFormWithStage('to_do')}
@@ -94,6 +101,7 @@ export default function Category() {
                 <IconPlus size={20} className="cursor-pointer" />
               </button>
             </div>
+
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
               {Object.entries(stageConfigs).map(([key, config]) => (
@@ -114,6 +122,7 @@ export default function Category() {
                     </Tooltip>
                   </div>
 
+
                   <div className="flex flex-col gap-2 p-3 max-h-[75vh] overflow-y-auto">
                     {(grouped[key] || []).length === 0 ? (
                       <p className="text-sm text-gray-500 italic p-2">No projects here yet.</p>
@@ -121,14 +130,17 @@ export default function Category() {
                       grouped[key].map(project => {
                         const totalTasks = project.tasks?.length || 0;
                         const completedTasks = project.tasks?.filter(t => t.status === 'completed').length || 0;
-                        const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
                         const scheduledDate = project.scheduled_at
-                          ? new Date(project.scheduled_at).toLocaleDateString(undefined, {
+                          ? new Date(project.scheduled_at).toLocaleString(undefined, {
                               year: 'numeric',
                               month: 'short',
-                              day: 'numeric'
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true,
                             })
                           : "No date";
+
 
                         return (
                           <Link
@@ -199,6 +211,7 @@ export default function Category() {
                                   </Tooltip>
                                 )}
 
+
                                 {/* Delete */}
                                 <Tooltip label="Delete project" position="bottom" withinPortal={false}>
                                   <button
@@ -227,13 +240,6 @@ export default function Category() {
                               </div>
                             </div>
                             <p className="text-xs text-gray-600 cursor-default">📅 {scheduledDate}</p>
-                            <div className="w-full bg-gray-200 rounded-full h-2 mt-1 cursor-default">
-                              <div
-                                className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${progress}%` }}
-                              ></div>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1 cursor-default">{progress}% complete</p>
                           </Link>
                         );
                       })
@@ -245,6 +251,7 @@ export default function Category() {
           </div>
         </div>
       </div>
+
 
       {/* Create Project Modal */}
       <Modal
@@ -276,6 +283,7 @@ export default function Category() {
         />
       </Modal>
 
+
       {/* Edit Category Modal */}
       <Modal
         opened={editModalOpen}
@@ -301,4 +309,8 @@ export default function Category() {
   );
 }
 
+
 Category.layout = (page) => page;
+
+
+

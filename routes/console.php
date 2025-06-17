@@ -34,19 +34,6 @@ Schedule::call(function() {
     ]);
 })->everyMinute();
 
-Schedule::call(function() {
-
-    Log::info('✅ Cron triggered at ' . now());
-    
-    Notification::create([
-        'user_id' => 2, 
-        'task_id' => 12, 
-        'message' => 'This is a test notification',
-        'is_read' => false,
-        'notified_at' => now(),
-    ]);
-})->everyMinute();
-
 Schedule::call(function () {
     $now = Carbon::now();
 

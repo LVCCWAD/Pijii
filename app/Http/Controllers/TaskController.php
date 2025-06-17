@@ -116,19 +116,16 @@ class TaskController extends Controller
         return Inertia::location(route('projects.show', ['category' => $category->id, 'project' => $project->id]));
     }
 
-
     public function edit(Category $category, Project $project, Task $task)
     {
         Gate::authorize('update', $task);
 
-
         $stages = Stage::all();
         $users = User::all();
-        $task->load(['project.category', 'project.parent']);
-       
+        $task->load(['project.category', 'project.parent', 'taskReminders']);
+
         return inertia('Edit/Task', compact('task', 'category', 'project', 'stages', 'users'));
     }
-
 
     public function update(Request $request, Category $category, Project $project, Task $task)
     {
@@ -156,16 +153,15 @@ class TaskController extends Controller
         ]);
 
 
-        if (!empty($validated['scheduled_at']) && !empty($validated['minutes_before']))
-        {
+        if (!empty($validated['scheduled_at']) && !empty($validated['minutes_before'])) {
             $scheduledAt = Carbon::parse($validated['scheduled_at']);
             $remindAt = $scheduledAt->copy()->subMinutes($validated['minutes_before']);
 
-
             if ($remindAt->greaterThan($scheduledAt)) {
-                return back()->withErrors(['minutes_before' => 'Reminder time cannot be after scheduled date'])->withInput();
+                return back()->withErrors([
+                    'minutes_before' => 'Reminder time cannot be after the scheduled date.',
+                ])->withInput();
             }
-
 
             TaskReminder::create([
                 'task_id' => $task->id,
@@ -174,7 +170,6 @@ class TaskController extends Controller
                 'remind_at' => $remindAt,
             ]);
         }
-
 
         EntityActionOccurred::dispatch(
             Auth::id(),
@@ -187,7 +182,7 @@ class TaskController extends Controller
         session()->flash('success', 'Task updated.');
 
 
-        return Inertia::location(route('projects.show', ['category' => $category->id, 'project' => $project->id]));    
+        return Inertia::location(route('tasks.show', ['category' => $category->id, 'project' => $project->id, 'task' => $task->id]));    
     }
 
 

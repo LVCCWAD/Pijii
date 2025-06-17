@@ -88,6 +88,7 @@ class ProjectController extends Controller
             'children.tasks.stage',
             'children.stage',
             'stage',
+            'tasks',
             'category',
             'createdBy',
             'parent'

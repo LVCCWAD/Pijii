@@ -18,8 +18,8 @@ function NavbarLink({ icon: Icon, label, active, onClick, link }) {
   );
 }
 const mockdata = [
-    { icon: IconArchive, label: 'Archived', link: '/Archived'},
-    { icon: IconTrash, label: 'Recently Deleted', link:'/Deleted' },
+    { icon: IconArchive, label: 'Archived Projects', link: '/projects/archived'},
+    { icon: IconTrash, label: 'Recently Deleted Projects', link:'/projects/recently-deleted' },
 
 ];
 export function NavbarMinimalColored() {

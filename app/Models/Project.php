@@ -61,6 +61,13 @@ class Project extends Model
     public function projectCollaborators(): HasMany
     {
         return $this->hasMany(ProjectCollaborator::class);
+    }   
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->withTrashed()
+            ->where($field ?? $this->getRouteKeyName(), $value)
+            ->firstOrFail();
     }
 
     public function logs(): MorphMany

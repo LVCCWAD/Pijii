@@ -248,21 +248,25 @@ class ProjectController extends Controller
             $project->tasks()->forceDelete();
             $project->children()->forceDelete();
             $project->forceDelete();
+            EntityActionOccurred::dispatch(
+                Auth::id(),
+                'Project',
+                $projectId,
+                'permanently deleted'
+            );
         } else {
             $project->delete();
+            EntityActionOccurred::dispatch(
+                Auth::id(),
+                'Project',
+                $projectId,
+                'soft deleted'
+            );
         }
 
+        session()->flash('success', 'Project deleted successfully.');
 
-        EntityActionOccurred::dispatch(
-            Auth::id(),
-            'Project',
-            $projectId,
-            'deleted'
-        );
-
-
-        return redirect()->route('categories.show', $project->category_id)
-            ->with('success', 'Project deleted successfully.');
+        return Inertia::location(url()->previous());
     }
 
 
@@ -274,10 +278,9 @@ class ProjectController extends Controller
         abort_unless($project->created_by === Auth::id(), 403);
 
 
-        // Recursive restore function
         $restoreTree = function ($proj) use (&$restoreTree) {
-            $proj->restore(); // restore project
-            $proj->tasks()->withTrashed()->restore(); // restore all its tasks
+            $proj->restore(); 
+            $proj->tasks()->withTrashed()->restore(); 
 
 
             foreach ($proj->children()->withTrashed()->get() as $child) {

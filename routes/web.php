@@ -1,8 +1,9 @@
 <?php
 
 
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NavController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -43,6 +44,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::get('/projects/archived', [NavController::class, 'archived'])->name('projects.archived');
+    Route::get('/projects/recently-deleted', [NavController::class, 'recentlyDeleted'])->name('projects.recentlyDeleted');
 
     // Category routes (excluding 'create')
     Route::get('/categories', [CategoryController::class, 'index'])->name(name: 'categories.index');
@@ -82,7 +85,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // Inertia pages (for testing)
-
 
     Route::inertia('/Archived', 'Archived');
     Route::inertia('/Notifications', 'Notifications');

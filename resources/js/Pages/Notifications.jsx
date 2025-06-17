@@ -53,9 +53,11 @@ export default function Notifications() {
                 {notifications.map((notification) => (
                   <li
                     key={notification.id}
-                    className={`flex justify-between items-center p-4 border rounded-lg shadow-sm ${
-                      notification.is_read ? 'bg-gray-50' : 'bg-white'
-                    } hover:bg-gray-100 transition`}
+                    className={`flex justify-between items-center p-4 border rounded-lg shadow-sm transition ${
+                      notification.is_read 
+                        ? 'bg-gray-50 opacity-30 grayscale' 
+                        : 'bg-white'
+                    } hover:bg-gray-100`}
                   >
                     <div className="flex-1 pr-4">
                       <p className="text-sm text-gray-400 mb-1">

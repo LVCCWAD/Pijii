@@ -11,7 +11,7 @@ export default function PijiHeader2({ title = "Title" }) {
     
   return (
     <div className="flex justify-between items-center piji-green-2 shadow-xl" style={{ padding: "0 20px 5px 20px" }}>
-      <h1 className="text-5xl font-bold">{title}</h1>
+      <h1 className="text-4xl font-black">{title}</h1>
     
     {/* <Link
       href="/Create/Options"

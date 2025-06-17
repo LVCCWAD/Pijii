@@ -13,11 +13,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('projects')
-            ->where('user_id', Auth::id())
-            ->get();
-
-        return view('categories.index', compact('categories'));
+        abort(403); 
     }
 
     public function store(Request $request)
@@ -47,6 +43,9 @@ class CategoryController extends Controller
 
         $projects = $category->projects()
             ->where('created_by', Auth::id())
+            ->whereNull('parent_id')
+            ->whereNull('archived_at')
+            ->whereNull('deleted_at')
             ->with('stage', 'tasks')
             ->get();
 

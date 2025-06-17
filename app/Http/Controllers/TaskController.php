@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
+use Inertia\Inertia;
 use App\Models\Stage;
 use App\Models\Project;
 use App\Models\Category;
@@ -32,7 +33,7 @@ class TaskController extends Controller
         $getAncestors = app('get_project_ancestors');
         $ancestors = $getAncestors($task->project?->parent);
 
-        return view('tasks.show', compact('task', 'ancestors'));
+        return inertia('Task_view', compact('task', 'ancestors'));
     }
 
     public function create(Category $category, Project $project)
@@ -41,7 +42,7 @@ class TaskController extends Controller
 
         $stages = Stage::all();
         $users = User::all();
-        return view('tasks.create', compact('category', 'project', 'stages', 'users'));
+        return inertia('Create/Task', compact('category', 'project', 'stages', 'users'));
     }
 
     public function store(Request $request, Category $category, Project $project)
@@ -68,12 +69,20 @@ class TaskController extends Controller
             'created_by' => Auth::id(),
         ]);
 
-        if ($validated['scheduled_at'] && isset($validated['minutes_before'])) {
+        if (!empty($validated['scheduled_at']) && !empty($validated['minutes_before'])) 
+        {
+            $scheduledAt = Carbon::parse($validated['scheduled_at']);
+            $remindAt = $scheduledAt->copy()->subMinutes($validated['minutes_before']);
+
+            if ($remindAt->greaterThan($scheduledAt)) {
+                return back()->withErrors(['minutes_before' => 'Reminder time cannot be after scheduled date'])->withInput();
+            }
+
             TaskReminder::create([
                 'task_id' => $task->id,
                 'user_id' => Auth::id(),
                 'minutes_before' => $validated['minutes_before'],
-                'remind_at' => Carbon::parse($validated['scheduled_at'])->subMinutes($validated['minutes_before']),
+                'remind_at' => $remindAt,
             ]);
         }
 
@@ -84,8 +93,9 @@ class TaskController extends Controller
             'created'
         );
 
-        return redirect()->route('projects.show', ['category' => $category->id, 'project' => $project->id])
-            ->with('success', 'Task created successfully.');
+        session()->flash('success', 'Task created successfully.');
+
+        return Inertia::location(route('projects.show', ['category' => $category->id, 'project' => $project->id]));
     }
 
     public function edit(Category $category, Project $project, Task $task)

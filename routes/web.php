@@ -51,6 +51,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/categories/{category}/projects/{project}/edit', [ProjectController::class, 'edit'])->name(name: 'projects.edit');
     Route::put('/categories/{category}/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
     Route::delete('/categories/{category}/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+    Route::patch('/categories/{category}/projects/{project}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
+    Route::post('/categories/{category}/projects/{project}/archive', [ProjectController::class, 'archive'])->name(name: 'projects.archive');
+    Route::patch('/categories/{category}/projects/{project}/unarchive', [ProjectController::class, 'unarchive'])->name('projects.unarchive');
 
     Route::get('/categories/{category}/projects/{project}/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('/categories/{category}/projects/{project}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');

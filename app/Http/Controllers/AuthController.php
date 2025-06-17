@@ -96,11 +96,19 @@ class AuthController extends Controller
     public function dashboard()
     {
 
-        $categories = Category::with('projects')
-            ->where('user_id', Auth::id())
-            ->get();
+        $categories = Category::with(['projects' => function ($query) {
+            $query->whereNull('deleted_at')
+                ->whereNull('parent_id')
+                ->whereNull('archived_at');
+        }])
+        ->where('user_id', Auth::id())
+        ->orderBy('scheduled_at')
+        ->get();
 
-        return Inertia::render('Dashboard', ['user' => Auth::user(), 'categories' => $categories]);
+        return Inertia::render('Dashboard', [
+            'user' => Auth::user(),
+            'categories' => $categories,
+        ]);
     }
 
     public function logout()

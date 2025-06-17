@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'project_name', 
         'priority_level', 
@@ -19,6 +21,7 @@ class Project extends Model
         'parent_id', 
         'category_id', 
         'stage_id', 
+        'archived_at'
     ];
 
     protected $casts = [

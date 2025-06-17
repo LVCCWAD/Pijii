@@ -42,42 +42,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Category::create([
-            'name' => 'School',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
-            'name' => 'School',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
-            'name' => 'School',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
-            'name' => 'School',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
             'name' => 'Work',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
-            'name' => 'Woasfdrk',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
-            'name' => 'Woafdrk',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
-            'name' => 'Worasdfk',
             'user_id' => $user->id
         ]);
 

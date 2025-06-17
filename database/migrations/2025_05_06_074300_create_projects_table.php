@@ -21,6 +21,8 @@ return new class extends Migration
             $table->timestamp('scheduled_at')->nullable();
             $table->boolean('is_collaborative')->default(false);
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->timestamp('archived_at')->nullable(); 
+            $table->softDeletes(); 
             $table->timestamps();
         });
     }

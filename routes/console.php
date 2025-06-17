@@ -21,21 +21,23 @@ Schedule::call(function () {
         ->delete();
 })->weekly();
 
-Schedule::call(function() {
+Schedule::call(function () {
+    $thresholdDate = Carbon::now()->subDays(30);
 
-    Log::info('✅ Cron triggered at ' . now());
-    
-    Notification::create([
-        'user_id' => 1, 
-        'task_id' => 1, 
-        'message' => 'This is a test notification',
-        'is_read' => false,
-        'notified_at' => now(),
-    ]);
-})->everyMinute();
+    DB::table('projects')
+        ->whereNotNull('deleted_at')
+        ->where('deleted_at', '<=', $thresholdDate)
+        ->forceDelete();
+})->daily();
 
 Schedule::call(function () {
+
+    Log::info(message: 'Task Reminding... ' . now());
+    Log::info(message: 'Current time: ' . now()->toDateTimeString());
+
     $now = Carbon::now();
+
+    Log::info(message: 'Current time: ' . $now->toDateTimeString());
 
     $reminders = TaskReminder::whereNull('notified_at')
     ->where('remind_at', '<=', $now)
@@ -60,13 +62,3 @@ Schedule::call(function () {
         ));
     }
 })->everyMinute();
-
-Schedule::call(function () {
-    $thresholdDate = Carbon::now()->subDays(30);
-
-    DB::table('projects')
-        ->whereNotNull('deleted_at')
-        ->where('deleted_at', '<=', $thresholdDate)
-        ->delete();
-
-})->daily();

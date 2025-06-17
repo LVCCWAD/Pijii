@@ -15,6 +15,11 @@ class TaskReminder extends Model
         'notified_at',
     ];
 
+    protected $casts = [
+        'remind_at' => 'datetime',
+        'notified_at' => 'datetime',
+    ];
+
     public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);

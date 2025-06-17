@@ -13,7 +13,7 @@ class NotificationController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return view('notifications.index', compact('notifications'));
+        return inertia('Notifications', compact('notifications'));
     }
 
     public function markRead(Notification $notification)

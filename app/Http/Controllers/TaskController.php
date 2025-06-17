@@ -84,21 +84,29 @@ class TaskController extends Controller
 
         if (!empty($validated['scheduled_at']) && !empty($validated['minutes_before']))
         {
+            info("Creating reminder: scheduled_at={$validated['scheduled_at']}, minutes_before={$validated['minutes_before']}");
+
             $scheduledAt = Carbon::parse($validated['scheduled_at']);
             $remindAt = $scheduledAt->copy()->subMinutes($validated['minutes_before']);
 
 
             if ($remindAt->greaterThan($scheduledAt)) {
+                    info("Reminder invalid: remindAt > scheduledAt");
+
                 return back()->withErrors(['minutes_before' => 'Reminder time cannot be after scheduled date'])->withInput();
             }
 
 
-            TaskReminder::create([
+            $reminder = TaskReminder::create([
                 'task_id' => $task->id,
                 'user_id' => Auth::id(),
                 'minutes_before' => $validated['minutes_before'],
                 'remind_at' => $remindAt,
             ]);
+
+            info("Reminder created: remind_at={$reminder->remind_at}");
+        } else {
+            info("No reminder created: scheduled_at=" . var_export($validated['scheduled_at'], true) . ", minutes_before=" . var_export($validated['minutes_before'], true));
         }
 
 

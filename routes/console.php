@@ -60,3 +60,13 @@ Schedule::call(function () {
         ));
     }
 })->everyMinute();
+
+Schedule::call(function () {
+    $thresholdDate = Carbon::now()->subDays(30);
+
+    DB::table('projects')
+        ->whereNotNull('deleted_at')
+        ->where('deleted_at', '<=', $thresholdDate)
+        ->delete();
+
+})->daily();

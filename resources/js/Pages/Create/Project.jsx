@@ -1,240 +1,164 @@
-import React from "react";
 import { useForm } from "@inertiajs/react";
+import React, { useState } from "react";
 
-export default function CreateTaskForm({ category = {}, project = {}, stages = [], onSuccess }) {
-  const reminderOptions = [
-    { label: "30 minutes before", value: 30 },
-    { label: "1 hour before", value: 60 },
-    { label: "3 hours before", value: 180 },
-    { label: "1 day before", value: 1440 },
-    { label: "2 days before", value: 2880 },
+export default function CreateProjectForm({
+  category = {},
+  selectedStage = {},
+  parentProject = null,
+  onSuccess,
+}) {
+  const stageOptions = [
+    { id: 1, label: "To Do", value: "to_do" },
+    { id: 2, label: "In Progress", value: "in_progress" },
+    { id: 3, label: "Completed", value: "completed" },
+    { id: 4, label: "On Hold", value: "on_hold" },
   ];
 
+  const [submitError, setSubmitError] = useState("");
+
   const { data, setData, post, processing, errors, reset } = useForm({
-    title: "",
-    description: "",
-    stage_id: stages.length ? stages[0].id : "",
+    project_name: "",
+    category_id: category?.id || "",
+    stage_id: selectedStage?.id || "",
+    parent_id: parentProject?.id || null,
     priority_level: "medium",
     scheduled_at: "",
-    minutes_before: "",
-    is_collaborative: false,
-    project_id: project.id || "",
   });
 
-  // Reset reminder if scheduled_at cleared
-  React.useEffect(() => {
-    if (!data.scheduled_at) {
-      setData("minutes_before", "");
-    }
-  }, [data.scheduled_at]);
+  const handleChange = (e) => {
+    setData(e.target.name, e.target.value);
+    setSubmitError(""); // clear error on change
+  };
 
-  function handleChange(e) {
-    const { name, type, value, checked } = e.target;
-    setData(name, type === "checkbox" ? checked : value);
-  }
-
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!project.id) {
-      alert("Project is required.");
+    if (!category?.id || !data.stage_id) {
+      setSubmitError("Please select a category and a stage.");
       return;
     }
 
-    post("/", {
+    post(`/categories/${category.id}/projects`, {
       onSuccess: () => {
-        reset();
         if (onSuccess) onSuccess();
+        reset();
+        setSubmitError("");
       },
       onError: () => {
+        setSubmitError("Something went wrong. Please check the form and try again.");
       },
     });
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-4 space-y-6">
-      {/* Category - read only */}
-      <div>
-        <label className="block font-semibold mb-1">Category</label>
-        <input
-          type="text"
-          readOnly
-          value={category.name || ""}
-          className="w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
-        />
-      </div>
+    <div className="max-w-3xl mx-auto p-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
 
-      {/* Project - read only */}
-      <div>
-        <label className="block font-semibold mb-1">Project</label>
-        <input
-          type="text"
-          readOnly
-          value={project.project_name || ""}
-          className="w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
-        />
-      </div>
-
-      {/* Title */}
-      <div>
-        <label className="block font-semibold mb-1" htmlFor="title">
-          Title
-        </label>
-        <input
-          id="title"
-          name="title"
-          value={data.title}
-          onChange={handleChange}
-          required
-          className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring ${
-            errors.title ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.title && <p className="text-red-600 text-sm mt-1">{errors.title}</p>}
-      </div>
-
-      {/* Description */}
-      <div>
-        <label className="block font-semibold mb-1" htmlFor="description">
-          Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          value={data.description}
-          onChange={handleChange}
-          rows={3}
-          className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring ${
-            errors.description ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.description && (
-          <p className="text-red-600 text-sm mt-1">{errors.description}</p>
+        {/* Top Error Banner */}
+        {submitError && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            <strong className="font-semibold">Error:</strong> {submitError}
+          </div>
         )}
-      </div>
 
-      {/* Stage */}
-      <div>
-        <label className="block font-semibold mb-1" htmlFor="stage_id">
-          Stage
-        </label>
-        <select
-          id="stage_id"
-          name="stage_id"
-          value={data.stage_id}
-          onChange={handleChange}
-          required
-          className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring ${
-            errors.stage_id ? "border-red-500" : "border-gray-300"
-          }`}
-        >
-          {stages.map((stage) => (
-            <option key={stage.id} value={stage.id}>
-              {stage.name}
-            </option>
-          ))}
-        </select>
-        {errors.stage_id && (
-          <p className="text-red-600 text-sm mt-1">{errors.stage_id}</p>
+        {/* Project Name */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Project Name</label>
+          <input
+            type="text"
+            name="project_name"
+            value={data.project_name}
+            onChange={handleChange}
+            className={`w-full px-3 py-2 border rounded-md ${
+              errors.project_name ? "border-red-500" : "border-gray-300"
+            }`}
+            required
+          />
+          {errors.project_name && (
+            <p className="text-red-500 text-sm mt-1">{errors.project_name}</p>
+          )}
+        </div>
+
+        {/* Category Display */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Category</label>
+          <div className="px-3 py-2 bg-gray-100 rounded-md text-gray-700">
+            {category?.name || "Unknown Category"}
+          </div>
+        </div>
+
+        {/* Stage Select */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Stage</label>
+          <select
+            name="stage_id"
+            value={data.stage_id}
+            onChange={handleChange}
+            className={`w-full px-3 py-2 border rounded-md ${
+              errors.stage_id ? "border-red-500" : "border-gray-300"
+            }`}
+            required
+          >
+            <option value="">Select Stage</option>
+            {stageOptions.map((stage) => (
+              <option key={stage.id} value={stage.id}>
+                {stage.label}
+              </option>
+            ))}
+          </select>
+          {errors.stage_id && (
+            <p className="text-red-500 text-sm mt-1">{errors.stage_id}</p>
+          )}
+        </div>
+
+        {/* Parent Project (optional) */}
+        {parentProject && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Parent Project</label>
+            <div className="px-3 py-2 bg-gray-100 rounded-md text-gray-700">
+              {parentProject.project_name}
+            </div>
+          </div>
         )}
-      </div>
 
-      {/* Priority Level */}
-      <div>
-        <label className="block font-semibold mb-1" htmlFor="priority_level">
-          Priority Level
-        </label>
-        <select
-          id="priority_level"
-          name="priority_level"
-          value={data.priority_level}
-          onChange={handleChange}
-          required
-          className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring ${
-            errors.priority_level ? "border-red-500" : "border-gray-300"
-          }`}
-        >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-        {errors.priority_level && (
-          <p className="text-red-600 text-sm mt-1">{errors.priority_level}</p>
-        )}
-      </div>
+        {/* Priority Level */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Priority</label>
+          <select
+            name="priority_level"
+            value={data.priority_level}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
 
-      {/* Scheduled At */}
-      <div>
-        <label className="block font-semibold mb-1" htmlFor="scheduled_at">
-          Scheduled Date
-        </label>
-        <input
-          type="date"
-          id="scheduled_at"
-          name="scheduled_at"
-          value={data.scheduled_at}
-          onChange={handleChange}
-          className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring ${
-            errors.scheduled_at ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.scheduled_at && (
-          <p className="text-red-600 text-sm mt-1">{errors.scheduled_at}</p>
-        )}
-      </div>
+        {/* Scheduled Date */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Scheduled Date</label>
+          <input
+            type="date"
+            name="scheduled_at"
+            value={data.scheduled_at}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-      {/* Task Reminder */}
-      <div>
-        <label className="block font-semibold mb-1" htmlFor="minutes_before">
-          Reminder (before scheduled date)
-        </label>
-        <select
-          id="minutes_before"
-          name="minutes_before"
-          value={data.minutes_before}
-          onChange={handleChange}
-          disabled={!data.scheduled_at}
-          className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring ${
-            errors.minutes_before ? "border-red-500" : "border-gray-300"
-          } ${!data.scheduled_at ? "bg-gray-100 cursor-not-allowed" : ""}`}
-        >
-          <option value="">No reminder</option>
-          {reminderOptions.map(({ label, value }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-        {errors.minutes_before && (
-          <p className="text-red-600 text-sm mt-1">{errors.minutes_before}</p>
-        )}
-      </div>
-
-      {/* Is Collaborative */}
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="is_collaborative"
-          name="is_collaborative"
-          checked={data.is_collaborative}
-          onChange={handleChange}
-          className="rounded"
-        />
-        <label htmlFor="is_collaborative" className="font-semibold">
-          Collaborative Task
-        </label>
-      </div>
-
-      {/* Submit button */}
-      <div>
-        <button
-          type="submit"
-          disabled={processing}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
-        >
-          {processing ? "Creating..." : "Create Task"}
-        </button>
-      </div>
-    </form>
+        {/* Submit */}
+        <div className="text-right">
+          <button
+            type="submit"
+            disabled={processing}
+            className="bg-green-700 text-white px-6 py-2 rounded-md hover:bg-green-800"
+          >
+            {processing ? "Creating..." : "Create Project"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

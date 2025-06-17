@@ -62,7 +62,6 @@ export default function ProjectView() {
               </div>
             )}
 
-            {/* Header Path */}
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <div className="flex gap-1 items-center flex-wrap">
                 <h1 className="text-3xl font-bold cursor-pointer">
@@ -90,7 +89,6 @@ export default function ProjectView() {
               </div>
             </div>
 
-            {/* Subprojects */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-2xl font-bold flex items-center gap-1">
@@ -165,7 +163,6 @@ export default function ProjectView() {
               ))}
             </div>
 
-            {/* Tasks */}
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-2xl font-bold">Tasks</h2>
               <Tooltip label="Create a new task">
@@ -199,30 +196,18 @@ export default function ProjectView() {
                     </Tooltip>
                   </div>
                   <div className="flex flex-col gap-1 p-2">
-                    {tasks
-                      .filter((task) => task.stage?.id === stage.id)
-                      .map((task) => (
-                        <Link key={task.id} href="#" className="group cursor-pointer">
-                          <div className="group w-full bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-blue-600 active:scale-95 active:bg-amber-200 px-3 py-2">
-                            <div className="flex justify-between items-center">
-                              <p className="font-medium">{task.task_name}</p>
-                              <div className="opacity-0 group-hover:opacity-100 transition-all duration-200">
-                                <Tooltip label="Edit task">
-                                  <IconPencil className="text-gray-500 cursor-pointer group-hover:text-amber-600 transition-colors duration-200" />
-                                </Tooltip>
-                              </div>
-                            </div>
-                            {task.description && (
-                              <p className="text-sm text-gray-500 line-clamp-2">{task.description}</p>
-                            )}
-                            {task.due_date && (
-                              <p className="text-xs text-gray-400 mt-1">
-                                Due: {new Date(task.due_date).toLocaleDateString()}
-                              </p>
-                            )}
+                    {tasks.filter((task) => task.stage?.id === stage.id).map((task) => (
+                      <Link key={task.id} href="#" className="group cursor-pointer">
+                        <div className="group flex w-full min-h-[40px] items-center justify-between bg-amber-50 rounded-xl drop-shadow-md transition-all duration-200 hover:bg-amber-100 hover:scale-105 hover:text-blue-600 active:scale-95 active:bg-amber-200 px-3 py-2">
+                          <p>{task.task_name}</p>
+                          <div className="opacity-0 group-hover:opacity-100 transition-all duration-200">
+                            <Tooltip label="Edit task">
+                              <IconPencil className="text-gray-500 cursor-pointer group-hover:text-amber-600 transition-colors duration-200" />
+                            </Tooltip>
                           </div>
-                        </Link>
-                      ))}
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 </div>
               ))}
@@ -231,7 +216,6 @@ export default function ProjectView() {
         </div>
       </div>
 
-      {/* Subproject Modal */}
       <Modal
         opened={openedSubprojectModal}
         onClose={() => setOpenedSubprojectModal(false)}
@@ -260,7 +244,6 @@ export default function ProjectView() {
         />
       </Modal>
 
-      {/* Edit Project Modal */}
       <Modal
         opened={openedEditProjectModal}
         onClose={() => setOpenedEditProjectModal(false)}
@@ -288,7 +271,6 @@ export default function ProjectView() {
         />
       </Modal>
 
-      {/* Task Modal */}
       <Modal
         opened={openedTaskModal}
         onClose={() => setOpenedTaskModal(false)}

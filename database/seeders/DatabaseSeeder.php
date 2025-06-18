@@ -21,21 +21,6 @@ class DatabaseSeeder extends Seeder
             'avatar' => 'images/default-avatar.png',
             'email_verified_at' => now()
         ]);
-        
-        Category::create([
-            'name' => 'Personal',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
-            'name' => 'School',
-            'user_id' => $user->id
-        ]);
-
-        Category::create([
-            'name' => 'Work',
-            'user_id' => $user->id
-        ]);
 
         if (DB::table('stages')->count() == 0) {
             DB::table('stages')->insert([
@@ -45,6 +30,6 @@ class DatabaseSeeder extends Seeder
                 ['stage_name' => 'on_hold'],
             ]);
         }
-
+        
     }
 }

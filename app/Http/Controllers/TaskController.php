@@ -23,7 +23,7 @@ class TaskController extends Controller
 {
     public function show(Category $category, Project $project, Task $task)
     {
-        abort_unless($task->user_id === Auth::id(), 403);
+        abort_unless($task->created_by === Auth::id(), 403);
 
 
         $task->load([
@@ -46,7 +46,7 @@ class TaskController extends Controller
 
     public function create(Category $category, Project $project)
     {
-        abort_unless($project->user_id === Auth::id(), 403);
+        abort_unless($project->created_by === Auth::id(), 403);
       
         $stages = Stage::all();
         $users = User::all();
@@ -56,7 +56,7 @@ class TaskController extends Controller
 
     public function store(Request $request, Category $category, Project $project)
     {
-        abort_unless($category->user_id === Auth::id(), 403);
+        abort_unless($category->created_by === Auth::id(), 403);
 
 
         $validated = $request->validate([
@@ -124,7 +124,7 @@ class TaskController extends Controller
 
     public function edit(Category $category, Project $project, Task $task)
     {
-        abort_unless($task->user_id === Auth::id(), 403);
+        abort_unless($task->created_by === Auth::id(), 403);
 
         $stages = Stage::all();
         $users = User::all();
@@ -135,7 +135,7 @@ class TaskController extends Controller
 
     public function update(Request $request, Category $category, Project $project, Task $task)
     {
-        abort_unless($task->user_id === Auth::id(), 403);
+        abort_unless($task->created_by === Auth::id(), 403);
 
 
         $validated = $request->validate([
@@ -154,6 +154,7 @@ class TaskController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'stage_id' => $validated['stage_id'],
+            'created_by' => Auth::id(),
             'priority_level' => $validated['priority_level'],
             'scheduled_at' => $validated['scheduled_at'] ?? null,
         ]);
@@ -194,7 +195,7 @@ class TaskController extends Controller
 
     public function destroy(Category $category, Project $project, Task $task)
     {
-        abort_unless($category->user_id === Auth::id(), 403);
+        abort_unless($task->created_by === Auth::id(), 403);
 
 
         $taskId = $task->id;

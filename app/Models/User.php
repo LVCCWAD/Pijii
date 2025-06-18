@@ -77,4 +77,18 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Log::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $defaultCategories = ['Personal', 'School', 'Work'];
+
+            foreach ($defaultCategories as $name) {
+                Category::create([
+                    'name' => $name,
+                    'user_id' => $user->id,
+                ]);
+            }
+        });
+    }
 }

@@ -89,7 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/notifications/{notification}/mark-unread', [NotificationController::class, 'markUnread'])->name('notifications.markUnread');
 
     Route::get('/urgent', [NavController::class, 'urgent'])->name('urgent');
-
+    Route::get('/search', [NavController::class, 'search'])->name('search');
 });
 
 

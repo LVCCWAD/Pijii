@@ -19,7 +19,7 @@ export default function PijiHeader({ showBackButton = false }) {
     <header className="app-header">
 
       <div><h1 className="text-5xl font-black">Pijii</h1></div>
-
+    
       {/* Middle: Date */}
       <div className="ml-125 header-middle">
         <p className="text-xl font-bold date-text">{today}</p>
@@ -33,7 +33,11 @@ export default function PijiHeader({ showBackButton = false }) {
 
         <Link className="profile" href="/profile">
           <img
-            src={user?.avatar} 
+            src={
+              user?.avatar?.startsWith("avatars/")
+                ? `/storage/${user.avatar}`
+                : `/${user?.avatar || 'images/default-avatar.png'}`
+            }
             alt="Profile"
             className="profile-pic"
           />

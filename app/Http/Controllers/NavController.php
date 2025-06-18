@@ -75,4 +75,8 @@ class NavController extends Controller
         return Inertia::render('Landing');
     }
 
+    public function search()
+    {
+        return inertia('Search');
+    }
 }

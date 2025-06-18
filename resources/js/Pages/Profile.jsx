@@ -16,7 +16,7 @@ export default function Profile() {
         "Are you sure you want to delete your account? This action is irreversible."
       )
     ) {
-      router.delete("/user");
+      router.delete("/profile/delete");
     }
   };
 

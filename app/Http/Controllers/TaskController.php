@@ -23,7 +23,7 @@ class TaskController extends Controller
 {
     public function show(Category $category, Project $project, Task $task)
     {
-        Gate::authorize('view', $task);
+        abort_unless($task->user_id === Auth::id(), 403);
 
 
         $task->load([
@@ -46,9 +46,8 @@ class TaskController extends Controller
 
     public function create(Category $category, Project $project)
     {
-        Gate::authorize('create', [Task::class, $project]);
-
-
+        abort_unless($project->user_id === Auth::id(), 403);
+      
         $stages = Stage::all();
         $users = User::all();
         return inertia('Create/Task', compact('category', 'project', 'stages', 'users'));
@@ -57,7 +56,7 @@ class TaskController extends Controller
 
     public function store(Request $request, Category $category, Project $project)
     {
-        Gate::authorize('create', [Task::class, $project]);
+        abort_unless($category->user_id === Auth::id(), 403);
 
 
         $validated = $request->validate([
@@ -77,7 +76,6 @@ class TaskController extends Controller
             'stage_id' => $validated['stage_id'],
             'priority_level' => $validated['priority_level'],
             'scheduled_at' => $validated['scheduled_at'] ?? null,
-            'is_collaborative' => $request->boolean('is_collaborative'),
             'created_by' => Auth::id(),
         ]);
 
@@ -126,7 +124,7 @@ class TaskController extends Controller
 
     public function edit(Category $category, Project $project, Task $task)
     {
-        Gate::authorize('update', $task);
+        abort_unless($task->user_id === Auth::id(), 403);
 
         $stages = Stage::all();
         $users = User::all();
@@ -137,7 +135,7 @@ class TaskController extends Controller
 
     public function update(Request $request, Category $category, Project $project, Task $task)
     {
-        Gate::authorize('update', $task);
+        abort_unless($task->user_id === Auth::id(), 403);
 
 
         $validated = $request->validate([
@@ -196,7 +194,7 @@ class TaskController extends Controller
 
     public function destroy(Category $category, Project $project, Task $task)
     {
-        Gate::authorize('delete', $task);
+        abort_unless($category->user_id === Auth::id(), 403);
 
 
         $taskId = $task->id;

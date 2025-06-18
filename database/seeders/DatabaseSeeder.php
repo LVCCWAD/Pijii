@@ -15,23 +15,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'name' => 'Demo User 1',
-            'email' => 'demouser1@gmail.com',
+            'name' => 'Demo User',
+            'email' => 'demouser@gmail.com',
             'password' => Hash::make('password'),
             'avatar' => 'images/default-avatar.png',
-            'email_verified_at' => now()  
+            'email_verified_at' => now()
         ]);
-
-        User::create([
-            'name' => 'Demo User 2',
-            'email' => 'demouser2@gmail.com',
-            'password' => Hash::make('password'),
-            'avatar' => 'images/default-avatar.png',
-            'email_verified_at' => now()  
-        ]);
-
-
-        $categoryId = DB::table('categories')->insertGetId([
+        
+        Category::create([
             'name' => 'Personal',
             'user_id' => $user->id
         ]);
@@ -55,80 +46,5 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $project = Project::create([
-            'category_id' => $categoryId,
-            'stage_id' => 1,  
-            'project_name' => 'WAD',
-            'priority_level' => 'medium',
-            'scheduled_at' => now(),
-            'is_collaborative' => true,
-            'created_by' => $user->id,
-        ]);
-
-        Project::create([
-            'category_id' => $categoryId,
-            'stage_id' => 2,  
-            'project_name' => 'Another Demo Project',
-            'priority_level' => 'high',
-            'scheduled_at' => now(),
-            'is_collaborative' => true,
-            'created_by' => $user->id,
-        ]);
-
-        Project::create([
-            'parent_id' => 1,
-            'category_id' => $categoryId,
-            'stage_id' => 1,  
-            'project_name' => 'asdfasdf',
-            'priority_level' => 'high',
-            'scheduled_at' => now(),
-            'is_collaborative' => true,
-            'created_by' => $user->id,
-        ]);
-
-        Project::create([
-            'parent_id' => 1,
-            'category_id' => $categoryId,
-            'stage_id' => 1,  
-            'project_name' => 'Reporting',
-            'priority_level' => 'high',
-            'scheduled_at' => now(),
-            'is_collaborative' => true,
-            'created_by' => $user->id,
-        ]);
-
-        Project::create([
-            'parent_id' => 1,
-            'category_id' => $categoryId,
-            'stage_id' => 1,  
-            'project_name' => 'Reportiasdfng',
-            'priority_level' => 'high',
-            'scheduled_at' => now(),
-            'is_collaborative' => true,
-            'created_by' => $user->id,
-        ]);
-
-        Project::create([
-            'parent_id' => 1,
-            'category_id' => $categoryId,
-            'stage_id' => 1,  
-            'project_name' => 'Reporting',
-            'priority_level' => 'high',
-            'scheduled_at' => now(),
-            'is_collaborative' => false,
-            'created_by' => $user->id,
-        ]);
-
-        foreach (['Task One', 'Task Two', 'Task Three'] as $title) {
-            Task::create([
-                'title' => $title,
-                'description' => "$title description.",
-                'project_id' => $project->id,
-                'stage_id' => 1, 
-                'priority_level' => 'high',
-                'scheduled_at' => null,
-                'created_by' => $user->id,
-            ]);
-        }
     }
 }

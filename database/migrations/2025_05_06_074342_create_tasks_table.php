@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('stage_id')->constrained()->onDelete('cascade');
             $table->enum('priority_level', ['low', 'medium', 'high'])->default('medium');
-            $table->boolean('is_collaborative')->default(false);
             $table->timestamp('scheduled_at')->nullable();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();

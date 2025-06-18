@@ -16,7 +16,6 @@ class Project extends Model
         'project_name', 
         'priority_level', 
         'scheduled_at', 
-        'is_collaborative', 
         'created_by', 
         'parent_id', 
         'category_id', 
@@ -57,11 +56,6 @@ class Project extends Model
     {
         return $this->hasMany(Project::class, 'parent_id');
     }
-
-    public function projectCollaborators(): HasMany
-    {
-        return $this->hasMany(ProjectCollaborator::class);
-    }   
 
     public function resolveRouteBinding($value, $field = null)
     {

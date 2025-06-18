@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
@@ -80,6 +81,7 @@ class UserController extends Controller
 
         User::destroy($userId);
 
-        return redirect('/login')->with('status', value: 'Account deleted.');
+        session()->flash('success', 'Account deleted successfully.');
+        return Inertia::location('/login');
     }
 }

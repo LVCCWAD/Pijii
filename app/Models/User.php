@@ -48,12 +48,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class);
-    }
-
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
@@ -82,24 +76,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function logs(): HasMany
     {
         return $this->hasMany(Log::class);
-    }
-
-   public function taskCollaborations(): HasMany
-    {
-        return $this->hasMany(TaskCollaborator::class, 'user_id');
-    }
-    public function grantedTaskCollaborations(): HasMany
-    {
-        return $this->hasMany(TaskCollaborator::class, 'granted_by');
-    }
-
-    public function projectCollaborations(): HasMany 
-    {
-        return $this->hasMany(ProjectCollaborator::class, 'user_id');
-    }
-
-    public function grantedProjectCollaborations(): HasMany 
-    {
-        return $this->hasMany(ProjectCollaborator::class, 'granted_by');
     }
 }

@@ -47,28 +47,10 @@ class Task extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function media(): HasMany
-    {
-        return $this->hasMany(Media::class);
-    }
-
-    public function taskReminders(): HasMany
-    {
-        return $this->hasMany(TaskReminder::class);
-    }
 
     public function logs(): MorphMany
     {
         return $this->morphMany(Log::class, 'entity');
     }
     
-    public function taskCollaborators(): HasMany
-    {
-        return $this->hasMany(TaskCollaborator::class);
-    }
 }

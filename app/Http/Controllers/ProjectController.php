@@ -78,7 +78,7 @@ class ProjectController extends Controller
     public function show(Category $category, Project $project)
     {
         abort_unless(
-            $project->created_by === Auth::id() || $project->is_collaborative,
+            $project->created_by === Auth::id(),
             403
         );
 
@@ -113,7 +113,7 @@ class ProjectController extends Controller
     public function edit(Category $category, Project $project)
     {
         abort_unless(
-            $project->created_by === Auth::id() || $project->is_collaborative,
+            $project->created_by === Auth::id(),
             403
         );
 
@@ -131,7 +131,7 @@ class ProjectController extends Controller
     public function update(Request $request, Category $category, Project $project)
     {
         abort_unless(
-            $project->created_by === Auth::id() || $project->is_collaborative,
+            $project->created_by === Auth::id(),
             403
         );
 
@@ -143,9 +143,6 @@ class ProjectController extends Controller
             'scheduled_at' => 'nullable|date',
             'parent_id' => 'nullable|exists:projects,id',
         ]);
-
-
-        $validated['is_collaborative'] = $request->has('is_collaborative');
 
 
         $project->update($validated);

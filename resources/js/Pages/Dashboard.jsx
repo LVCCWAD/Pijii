@@ -69,23 +69,27 @@ export default function Dashboard() {
                   What are we doing <br className="hidden md:inline" /> today?
                 </p>
               </div>
+              
               <div className="grid grid-cols-2 gap-y-2 w-[300px] sm:w-[400px]">
-                <div className="flex items-center text-gray-600 gap-1 mt-2">
-                  <IconCalendar size={24} color="gray" />
-                  Calendar (Coming Soon)
-                </div>
+
                 <Link className="flex items-center gap-1" href="/Pijii-App">
                   <IconInfoCircle size={24} color="green" />
                   About Pijii
                 </Link>
-
+              
                 <Link className="flex items-center gap-1 mt-2" href="/urgent">
                   <IconFlag size={24} color="darkorange" />
                   Urgent Tasks
                 </Link>
+
+                <div className="flex items-center text-gray-500 gap-1 mt-2">
+                  <IconCalendar size={24} color="gray" />
+                  <span className="whitespace-nowrap">Calendar (Soon)</span>
+                </div>
+                
                 <div className="flex items-center text-gray-500 gap-1 mt-2">
                   <IconMessageCircleQuestion size={24} color="gray" />
-                  Ask Pijii (Coming Soon)
+                  Ask Pijii (Soon)
                 </div>
               </div>
             </div>

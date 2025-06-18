@@ -84,23 +84,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile/delete', [UserController::class, 'destroy'])->name('user.destroy');
 
 
-    // Inertia pages (for testing)
-
-    Route::inertia('/Archived', 'Archived');
-    Route::inertia('/Notifications', 'Notifications');
-    Route::inertia('/Deleted', 'Deleted');
     Route::inertia('/Settings', 'Settings');
-    Route::inertia('/Category', 'Category_view');
-    Route::inertia('/Project', 'Project_view');
-    Route::inertia('/Task', 'Task_view');
-
-
     Route::inertia('/settings/general', 'Settings/General');
     Route::inertia('/settings/notification', 'Settings/Notifications');
     Route::inertia('/settings/preferences', 'Settings/Preferences');
     Route::inertia('/settings/profile', 'Settings/Profile');
     Route::inertia('/Create/Options', 'Create_Options');
-
 
     // Notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

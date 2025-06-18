@@ -198,7 +198,7 @@ class ProjectController extends Controller
         );
 
 
-        return back()->with('success', 'Project archived successfully.');
+        return redirect()->back()->with('success', 'Project archived successfully.');
     }  
 
 
@@ -232,7 +232,7 @@ class ProjectController extends Controller
         );
 
 
-        return back()->with('success', 'Project and all its subprojects unarchived.');
+        return redirect()->back()->with('success', 'Project and all its subprojects unarchived.');
     }
 
 
@@ -264,9 +264,7 @@ class ProjectController extends Controller
             );
         }
 
-        session()->flash('success', 'Project deleted successfully.');
-
-        return Inertia::location(url()->previous());
+        return redirect()->back()->with('success', value: 'Project deleted successfully.');
     }
 
 

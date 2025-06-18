@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Stage;
+use App\Models\Project;
 use App\Models\Category;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
@@ -93,22 +96,70 @@ class AuthController extends Controller
         ]);
     }
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
 
-        $categories = Category::with(['projects' => function ($query) {
-            $query->whereNull('deleted_at')
-                ->whereNull('parent_id')
-                ->whereNull('archived_at');
-        }])
-        ->where('user_id', Auth::id())
-        ->orderBy('scheduled_at')
-        ->get();
+        $search = $request->input('search');
+        $userId = Auth::id();
+
+        if ($search) {
+            $search = trim($search);
+
+            $categories = Category::with(['projects' => function ($query) use ($search) {
+                    $query->whereNull('deleted_at')
+                        ->whereNull('parent_id')
+                        ->whereNull('archived_at')
+                        ->where(function ($q) use ($search) {
+                            $q->where('name', 'LIKE', "%$search%")
+                            ->orWhere('description', 'LIKE', "%$search%");
+                        });
+                }])
+                ->where('user_id', $userId)
+                ->where('name', 'LIKE', "%$search%")
+                ->orderBy('scheduled_at')
+                ->get();
+
+            $matchedProjects = Project::where('user_id', $userId)
+                ->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%$search%")
+                    ->orWhere('description', 'LIKE', "%$search%");
+                })
+                ->whereNull('deleted_at')
+                ->get();
+
+            $matchedTasks = Task::where('user_id', $userId)
+                ->where(function ($q) use ($search) {
+                    $q->where('title', 'LIKE', "%$search%")
+                    ->orWhere('description', 'LIKE', "%$search%");
+                })
+                ->get();
+        } else {
+            $categories = Category::with(['projects' => function ($query) {
+                    $query->whereNull('deleted_at')
+                        ->whereNull('parent_id')
+                        ->whereNull('archived_at');
+                }])
+                ->where('user_id', $userId)
+                ->orderBy('scheduled_at')
+                ->get();
+
+            $matchedProjects = collect(); 
+            $matchedTasks = collect(); 
+        }
 
         return Inertia::render('Dashboard', [
             'user' => Auth::user(),
             'categories' => $categories,
+            'notifications' => Notification::where('user_id', $userId)
+                ->where('is_read', false)
+                ->latest('created_at')
+                ->take(3)
+                ->get(),
+            'search' => $search,
+            'matchedProjects' => $matchedProjects,
+            'matchedTasks' => $matchedTasks,
         ]);
+
     }
 
     public function logout()

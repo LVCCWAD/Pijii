@@ -75,14 +75,11 @@ export default function Archived() {
 
   const handleDelete = (categoryId, projectId, projectName) => {
     if (confirm(`Are you sure you want to delete "${projectName}"?`)) {
-      router.delete(
-        `/categories/${categoryId}/projects/${projectId}`,
-        {
-          onSuccess: () => {
-            router.reload({ only: ["projects", "flash"] });
-          },
-        }
-      );
+      router.delete(`/categories/${categoryId}/projects/${projectId}`, {
+        onSuccess: () => {
+          router.reload({ only: ["projects", "flash"] });
+        },
+      });
     }
   };
 
@@ -90,7 +87,6 @@ export default function Archived() {
     <div className="piji-green h-screen">
       <div className="flex flex-row w-full h-screen">
         <NavbarMinimalColored />
-
         <div className="flex flex-col w-full overflow-y-auto">
           <PijiHeader />
           <PijiHeader2 title="Archived" />
@@ -115,17 +111,15 @@ export default function Archived() {
                       const { color, label } = getPriorityStyle(project.priority_level);
 
                       return (
-                        <div
+                        <Link
                           key={project.id}
-                          className="group w-full md:w-72 bg-amber-50 rounded-lg shadow-sm transition-all duration-200 hover:bg-amber-100 hover:scale-[1.02] active:scale-95 active:bg-amber-200 p-3"
+                          href={`/categories/${project.category_id}/projects/${project.id}`}
+                          className="group w-full md:w-72 bg-amber-50 rounded-lg shadow-sm transition-all duration-200 hover:bg-amber-100 hover:scale-[1.02] active:scale-95 active:bg-amber-200 p-3 block relative"
                         >
                           <div className="flex items-center gap-2 mb-1">
-                            <Link
-                              href={`/categories/${project.category_id}/projects/${project.id}`}
-                              className="font-medium text-sm flex-1 no-underline text-black"
-                            >
+                            <span className="font-medium text-sm flex-1 text-black">
                               {project.project_name || "Untitled"}
-                            </Link>
+                            </span>
                             <Tooltip label={label} position="bottom" withArrow>
                               <div
                                 className={`w-5 h-5 rounded-full flex items-center justify-center ${color}`}
@@ -145,7 +139,11 @@ export default function Archived() {
                           <div className="flex gap-1 mt-2">
                             <Tooltip label="Unarchive" position="bottom" withArrow>
                               <button
-                                onClick={() => handleUnarchive(project.category_id, project.id, project.project_name)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  handleUnarchive(project.category_id, project.id, project.project_name);
+                                }}
                                 className="p-1 rounded hover:bg-green-100"
                               >
                                 <IconArrowBarUp size={16} className="text-green-600" />
@@ -154,14 +152,18 @@ export default function Archived() {
 
                             <Tooltip label="Delete" position="bottom" withArrow>
                               <button
-                                onClick={() => handleDelete(project.category_id, project.id, project.project_name)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  handleDelete(project.category_id, project.id, project.project_name);
+                                }}
                                 className="p-1 rounded hover:bg-red-100"
                               >
                                 <IconTrash size={16} className="text-red-600" />
                               </button>
                             </Tooltip>
                           </div>
-                        </div>
+                        </Link>
                       );
                     })}
                   </div>

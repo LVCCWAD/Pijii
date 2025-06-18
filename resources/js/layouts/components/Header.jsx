@@ -18,31 +18,15 @@ export default function PijiHeader({ showBackButton = false }) {
   return (
     <header className="app-header">
 
-      {/* Left Section */}
-      <div className="header-left search-input">
-        <Link><IconZoom size={29} /></Link>
-        <input type="text" placeholder=" Search..." className="w-full h-[20px]" />
-      </div>
-
-              {/* Conditionally show back button */}
-        {showBackButton && (
-          
-          <Link href={'/'}
-          style={{padding:'10px'}}  
-          className="piji-green flex items-center gap-1 text-md font-large text-white hover:underline rounded-xl">
-            <IconArrowLeft size={24} />
-            <span >Back to Dashboard</span>
-          </Link>
-        )}
-
+      <div><h1 className="text-5xl font-black">Pijii</h1></div>
 
       {/* Middle: Date */}
-      <div className="header-middle">
+      <div className="ml-125 header-middle">
         <p className="text-xl font-bold date-text">{today}</p>
       </div>
 
       {/* Right: Notifications & Profile */}
-      <div className="header-right" style={{ margin: '5px 90px 0 0' }}>
+      <div className="header-right" style={{ margin: '5px 30px 0 0' }}>
         {/* <div className="notification">
           <Link href="/Notifications"><IconBell size={29} /></Link>
         </div> */}

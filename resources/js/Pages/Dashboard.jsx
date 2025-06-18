@@ -14,6 +14,8 @@ import {
   IconCategory,
   IconPlus,
   IconX,
+  IconInfoCircle,
+  IconCalendar
 } from "@tabler/icons-react";
 
 function timeAgo(dateString) {
@@ -61,7 +63,7 @@ export default function Dashboard() {
         {/* Greeting + Notifications */}
         <div className="flex flex-col lg:flex-row gap-4 px-4 py-4">
           {/* Greeting Card */}
-          <div className="relative flex flex-col lg:flex-row bg-white flex-1 rounded-3xl drop-shadow-md px-6 py-4 min-h-[270px] overflow-visible">
+          <div className="relative flex flex-col lg:flex-row bg-white flex-1 rounded-3xl drop-shadow-md px-6 py-4 min-h-[250px] overflow-visible">
             <div className="flex flex-col justify-start gap-5 z-10 lg:pr-[330px]">
               <div>
                 <h1 className="text-3xl font-extrabold">Hi, {user.name}</h1>
@@ -70,22 +72,24 @@ export default function Dashboard() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-y-2 w-[300px] sm:w-[400px]">
-                <Link className="flex items-center gap-1 -mt-2" href="/calendar">
-                  <IconCalendarPlus size={24} color="royalblue" />
-                  Check Calendar
+                <div className="flex items-center text-gray-600 gap-1 mt-2">
+                  <IconCalendar size={24} color="gray" />
+                  Calendar (Coming Soon)
+                </div>
+                <Link className="flex items-center gap-1" href="/Pijii-App">
+                  <IconInfoCircle size={24} color="green" />
+                  About Pijii
                 </Link>
-                <Link className="flex items-center gap-1" href="/collaborations">
-                  <IconUsers size={24} color="green" />
-                  Collaboration Projects
-                </Link>
-                <Link className="flex items-center gap-1 mt-2" href="/tasks?urgent=1">
+                
+                <Link className="flex items-center gap-1 mt-2" href="/urgent">
                   <IconFlag size={24} color="darkorange" />
                   Urgent Tasks
                 </Link>
-                <Link className="flex items-center gap-1 mt-2" href="/ask">
-                  <IconMessageCircleQuestion size={24} />
-                  Ask Piji
-                </Link>
+                <div className="flex items-center text-gray-500 gap-1 mt-2">
+                  <IconMessageCircleQuestion size={24} color="gray" />
+                  Ask Pijii (Coming Soon)
+                </div>
+        
               </div>
             </div>
             <img
@@ -98,7 +102,7 @@ export default function Dashboard() {
           {/* Notifications */}
           <div className="flex flex-col lg:max-w-[340px] w-full rounded-3xl drop-shadow-md bg-white px-5 py-4 min-h-[270px] shrink-0">
             <div className="flex justify-between items-end">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <IconBell size={28} />
                 <h1 className="text-3xl font-bold">Notifications</h1>
               </div>
@@ -111,11 +115,11 @@ export default function Dashboard() {
             </div>
 
             {notifications.length > 0 ? (
-              <div className="mt-4 flex flex-col gap-3">
+              <div className="mt-4 flex flex-col gap-2">
                 {notifications.map((notif) => (
                   <div
                     key={notif.id}
-                    className="bg-blue-100 w-full flex items-center justify-between rounded-2xl drop-shadow px-4 py-3 hover:bg-blue-200 transition"
+                    className="bg-blue-100 w-full flex items-center justify-between rounded-2xl drop-shadow px-4 py-2 hover:bg-blue-200 transition"
                   >
                     <div className="flex flex-col w-full overflow-hidden">
                       <span className="font-medium truncate text-gray-800">

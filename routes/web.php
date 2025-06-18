@@ -12,10 +12,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\EmailVerificationController;
 
-
-// Public Landing
-Route::get('/', fn () => Inertia::render('Landing'));
-Route::inertia('/Piji-App', 'Landing');
+// Public
+Route::get('/Pijii-App', [NavController::class, 'landing'])->name('landing');
 
 
 // Guest routes (login/register)
@@ -83,18 +81,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/profile/update', [UserController::class, 'update'])->name('user.update');
     Route::delete('/profile/delete', [UserController::class, 'destroy'])->name('user.destroy');
 
-
-    Route::inertia('/Settings', 'Settings');
-    Route::inertia('/settings/general', 'Settings/General');
-    Route::inertia('/settings/notification', 'Settings/Notifications');
-    Route::inertia('/settings/preferences', 'Settings/Preferences');
-    Route::inertia('/settings/profile', 'Settings/Profile');
-    Route::inertia('/Create/Options', 'Create_Options');
+    Route::get('/settings', [NavController::class, 'settings'])->name('settings');
 
     // Notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{notification}/mark-read', [NotificationController::class, 'markRead'])->name('notifications.markRead');
     Route::patch('/notifications/{notification}/mark-unread', [NotificationController::class, 'markUnread'])->name('notifications.markUnread');
+
+    Route::get('/urgent', [NavController::class, 'urgent'])->name('urgent');
+
 });
 
 

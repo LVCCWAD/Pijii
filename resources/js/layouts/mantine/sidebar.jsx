@@ -42,7 +42,7 @@ export function NavbarMinimalColored() {
 
       <div style={{margin:"0px 0 0 0"}} className="justify-center"> 
         <Stack justify="center">
-          <NavbarLink icon={IconSettings2} label="Settings" link="/Settings" size={40}/>
+          <NavbarLink icon={IconSettings2} label="Settings" link="/settings" size={40}/>
         </Stack>
       </div>
 

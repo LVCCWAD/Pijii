@@ -82,6 +82,9 @@ Schedule::call(function () {
         $q->where('name', '!=', 'completed')
     )
     ->whereNotNull('scheduled_at')
+    ->whereNull('deleted_at')
+    ->whereNull('archived_at')
+    ->whereNull('notified_at')
     ->where('scheduled_at', '<', $now)
     ->get();
 

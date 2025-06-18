@@ -35,6 +35,7 @@ export default function Dashboard() {
   const [showFlash, setShowFlash] = useState(!!flash?.success);
   const form = useForm({ name: "" });
 
+  // Flash success fadeout
   useEffect(() => {
     if (flash?.success) {
       setShowFlash(true);
@@ -42,6 +43,13 @@ export default function Dashboard() {
       return () => clearTimeout(timer);
     }
   }, [flash?.success]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      router.reload({ only: ['notifications'] });
+    }, 5000); 
+    return () => clearInterval(interval);
+  }, []);
 
   function submit(e) {
     e.preventDefault();
@@ -80,7 +88,7 @@ export default function Dashboard() {
                   <IconInfoCircle size={24} color="green" />
                   About Pijii
                 </Link>
-                
+
                 <Link className="flex items-center gap-1 mt-2" href="/urgent">
                   <IconFlag size={24} color="darkorange" />
                   Urgent Tasks
@@ -89,7 +97,6 @@ export default function Dashboard() {
                   <IconMessageCircleQuestion size={24} color="gray" />
                   Ask Pijii (Coming Soon)
                 </div>
-        
               </div>
             </div>
             <img
@@ -117,8 +124,9 @@ export default function Dashboard() {
             {notifications.length > 0 ? (
               <div className="mt-4 flex flex-col gap-2">
                 {notifications.map((notif) => (
-                  <div
+                  <Link
                     key={notif.id}
+                    href="/notifications"
                     className="bg-blue-100 w-full flex items-center justify-between rounded-2xl drop-shadow px-4 py-2 hover:bg-blue-200 transition"
                   >
                     <div className="flex flex-col w-full overflow-hidden">
@@ -130,15 +138,16 @@ export default function Dashboard() {
                       </span>
                     </div>
                     <button
-                      onClick={() =>
-                        router.patch(`/notifications/${notif.id}/mark-read`)
-                      }
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.patch(`/notifications/${notif.id}/mark-read`);
+                      }}
                       className="ml-2 text-gray-500 hover:text-red-600 transition shrink-0"
                       title="Mark as read"
                     >
                       <IconX size={16} stroke={2} />
                     </button>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ) : (

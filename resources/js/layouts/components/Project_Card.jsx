@@ -53,7 +53,11 @@ export default function ProjectCard({
 
   function deleteCategory(e) {
     e.preventDefault();
-    if (confirm("Are you sure you want to delete this category? This cannot be undone.")) {
+    if (
+      confirm(
+        "Are you sure you want to delete this category? This cannot be undone."
+      )
+    ) {
       router.delete(`/categories/${categoryId}`, {
         preserveScroll: true,
       });
@@ -61,11 +65,15 @@ export default function ProjectCard({
   }
 
   return (
-    <div className={`project-card ${cardBg} rounded-2xl drop-shadow-md w-full max-w-[360px] flex flex-col`}>
+    <div
+      className={`project-card ${cardBg} rounded-2xl drop-shadow-md w-full max-w-[360px] flex flex-col`}
+    >
       {/* Header */}
       <div className="flex justify-between items-center px-4 py-3">
         <div className="flex items-center gap-2">
-          <div className={`${badgeColor} w-8 h-8 rounded-full flex items-center justify-center`}>
+          <div
+            className={`${badgeColor} w-8 h-8 rounded-full flex items-center justify-center`}
+          >
             <span className="font-semibold">{badgeNumber}</span>
           </div>
           <Link href={`/categories/${categoryId}`}>
@@ -77,6 +85,7 @@ export default function ProjectCard({
           <button
             onClick={deleteCategory}
             className="text-black hover:text-white hover:bg-red-600 p-1.5 rounded-lg transition-all cursor-pointer"
+            title="Delete Category"
           >
             <IconTrash size={22} />
           </button>
@@ -88,38 +97,43 @@ export default function ProjectCard({
         {/* Projects */}
         <div>
           {visibleProjects.length > 0 ? (
-            visibleProjects.map((project) => (
-              <div
-                key={project?.id ?? Math.random()}
-                className="bg-white w-full p-4 mb-2 rounded-xl shadow-sm text-sm text-gray-800"
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <h1 className="font-bold text-base truncate max-w-[75%]">
-                    {project?.project_name ?? "Untitled"}
-                  </h1>
+            visibleProjects.map((project) => {
+              const { color, label } = getPriorityStyle(project.priority_level);
+              const scheduledText = project.scheduled_at
+                ? formatDate(project.scheduled_at)
+                : "Unscheduled";
 
-                  {project.priority_level && (() => {
-                    const { color, label } = getPriorityStyle(project.priority_level);
-                    return (
+              return (
+                <Link
+                  key={project?.id ?? Math.random()}
+                  href={`/categories/${categoryId}/projects/${project.id}`}
+                  className="bg-white w-full p-4 mb-2 rounded-xl shadow-sm text-sm text-gray-800 flex flex-col hover:bg-gray-100 transition cursor-pointer"
+                >
+                  <div className="flex justify-between items-center mb-1">
+                    <div className="truncate max-w-[75%] font-bold">
+                      {project?.project_name ?? "Untitled"}
+                    </div>
+
+                    {project.priority_level && (
                       <Tooltip label={label} position="top" withArrow>
-                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${color}`}>
+                        <div
+                          className={`w-6 h-6 rounded-full flex items-center justify-center ${color}`}
+                        >
                           <IconFlag size={14} className="text-white" />
                         </div>
                       </Tooltip>
-                    );
-                  })()}
-                </div>
+                    )}
+                  </div>
 
-                {project?.scheduled_at && (
-                  <p className="text-xs text-gray-600">
-                    <span className="text-gray-500">Scheduled at:</span>{" "}
-                    <span className="font-medium text-gray-800">
-                      {formatDate(project.scheduled_at)}
+                  <div className="text-xs text-gray-500 italic">
+                    Scheduled at:{" "}
+                    <span className={project.scheduled_at ? "text-gray-700" : "text-gray-400"}>
+                      {scheduledText}
                     </span>
-                  </p>
-                )}
-              </div>
-            ))
+                  </div>
+                </Link>
+              );
+            })
           ) : (
             <p className="italic text-sm text-gray-500">No projects yet.</p>
           )}
@@ -136,7 +150,7 @@ export default function ProjectCard({
               ${cardBg} ${hoverBgMap[cardBg] ?? "hover:bg-opacity-80"} hover:scale-[1.02] hover:shadow-md`}
           >
             <IconPlus size={18} className="transition duration-200" />
-            <span>Add New Project</span>
+            <span>Add&nbsp;New&nbsp;Project</span>
           </Link>
         </div>
       </div>

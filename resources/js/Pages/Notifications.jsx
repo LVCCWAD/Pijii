@@ -1,28 +1,49 @@
+import { useEffect, useState } from "react";
 import { NavbarMinimalColored } from "../layouts/mantine/sidebar.jsx";
 import PijiHeader from "../layouts/components/Header.jsx";
 import PijiHeader2 from "../layouts/components/Header2.jsx";
-import { usePage, router } from '@inertiajs/react';
+import { usePage, router } from "@inertiajs/react";
 
 export default function Notifications() {
-  const { notifications, flash } = usePage().props;
+  const { notifications: initialNotifications, flash } = usePage().props;
+  const [notifications, setNotifications] = useState(initialNotifications);
+
+  // Polling to refresh notifications every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      router.reload({ only: ["notifications"], preserveState: true }).then(() => {
+        // Update notifications after reload
+        setNotifications(usePage().props.notifications || []);
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleMark = (notificationId, isRead) => {
     const url = isRead
       ? `/notifications/${notificationId}/mark-unread`
       : `/notifications/${notificationId}/mark-read`;
 
-    router.patch(url);
+    router.patch(url).then(() => {
+      // Optimistically update UI
+      setNotifications((prev) =>
+        prev.map((notif) =>
+          notif.id === notificationId ? { ...notif, is_read: !isRead } : notif
+        )
+      );
+    });
   };
 
   const formatDateTime = (datetime) => {
     const date = new Date(datetime);
     return date.toLocaleString(undefined, {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     });
   };
 
@@ -54,19 +75,27 @@ export default function Notifications() {
                   <li
                     key={notification.id}
                     className={`flex justify-between items-center p-4 border rounded-lg shadow-sm transition ${
-                      notification.is_read 
-                        ? 'bg-gray-50 opacity-30 grayscale' 
-                        : 'bg-white'
+                      notification.is_read
+                        ? "bg-gray-50 opacity-30 grayscale"
+                        : "bg-white"
                     } hover:bg-gray-100`}
                   >
                     <div className="flex-1 pr-4">
                       <p className="text-sm text-gray-400 mb-1">
-                        {notification.created_at_human} ·{' '}
-                        <span className={notification.is_read ? 'text-green-600' : 'text-red-600'}>
-                          {notification.is_read ? 'Read' : 'Unread'}
+                        {notification.created_at_human} ·{" "}
+                        <span
+                          className={
+                            notification.is_read ? "text-green-600" : "text-red-600"
+                          }
+                        >
+                          {notification.is_read ? "Read" : "Unread"}
                         </span>
                       </p>
-                      <p className={`text-base ${notification.is_read ? 'text-gray-600' : 'text-black'}`}>
+                      <p
+                        className={`text-base ${
+                          notification.is_read ? "text-gray-600" : "text-black"
+                        }`}
+                      >
                         {notification.message}
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
@@ -79,11 +108,11 @@ export default function Notifications() {
                         onClick={() => handleMark(notification.id, notification.is_read)}
                         className={`px-3 py-1 rounded border ${
                           notification.is_read
-                            ? 'border-yellow-400 text-yellow-600 hover:bg-yellow-50'
-                            : 'border-blue-400 text-blue-600 hover:bg-blue-50'
+                            ? "border-yellow-400 text-yellow-600 hover:bg-yellow-50"
+                            : "border-blue-400 text-blue-600 hover:bg-blue-50"
                         }`}
                       >
-                        {notification.is_read ? 'Mark Unread' : 'Mark Read'}
+                        {notification.is_read ? "Mark Unread" : "Mark Read"}
                       </button>
                     </div>
                   </li>

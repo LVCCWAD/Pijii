@@ -14,6 +14,8 @@ import {
   IconChevronDown,
   IconChevronRight,
   IconFlag,
+  IconArchive,
+  IconArchiveOff,
 } from "@tabler/icons-react";
 
 import CreateProjectForm from "../Pages/Create/Project.jsx";
@@ -53,6 +55,22 @@ export default function ProjectView() {
     }
   }, [flash?.success]);
 
+  const handleArchive = (sub) => {
+    if (confirm("Archive this subproject?")) {
+      router.post(`/categories/${category?.id}/projects/${sub.id}/archive`, {
+        onSuccess: () => window.location.reload(),
+      });
+    }
+  };
+
+  const handleUnarchive = (sub) => {
+    if (confirm("Unarchive this subproject?")) {
+      router.post(`/categories/${category?.id}/projects/${sub.id}/unarchive`, {
+        onSuccess: () => window.location.reload(),
+      });
+    }
+  };
+
   const stages = [
     { name: "To-do", id: 1, bg: "bg-gray-100", header: "bg-gray-200" },
     { name: "In Progress", id: 2, bg: "bg-yellow-100", header: "bg-amber-200" },
@@ -91,11 +109,7 @@ export default function ProjectView() {
                 ))}
                 <h1 className="text-3xl font-bold">{project.project_name}</h1>
                 <Tooltip label="Edit project">
-                  <button
-                    onClick={() => setOpenedEditProjectModal(true)}
-                    className="cursor-pointer"
-                    aria-label="Edit Project"
-                  >
+                  <button onClick={() => setOpenedEditProjectModal(true)} className="cursor-pointer" aria-label="Edit Project">
                     <IconEdit className="hover:text-amber-600 transition-colors duration-200" />
                   </button>
                 </Tooltip>
@@ -152,10 +166,22 @@ export default function ProjectView() {
                             <p className="font-semibold text-md">{sub.project_name || "Untitled"}</p>
                           </div>
                           <p className="text-xs text-gray-600">📅 {scheduledDate}</p>
-  
                         </Link>
 
-                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
+                          {sub.archived_at ? (
+                            <Tooltip label="Unarchive subproject">
+                              <button onClick={() => handleUnarchive(sub)} className="text-green-600 hover:text-green-800">
+                                <IconArchiveOff size={18} />
+                              </button>
+                            </Tooltip>
+                          ) : (
+                            <Tooltip label="Archive subproject">
+                              <button onClick={() => handleArchive(sub)} className="text-yellow-600 hover:text-yellow-800">
+                                <IconArchive size={18} />
+                              </button>
+                            </Tooltip>
+                          )}
                           <Tooltip label="Delete subproject">
                             <button
                               onClick={() => {

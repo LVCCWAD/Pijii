@@ -73,7 +73,7 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="flex h-screen bg-amber-50 overflow-hidden">
+    <div className="flex h-screen piji-green   overflow-hidden">
       <NavbarMinimalColored />
 
       <div className="flex flex-col flex-1 overflow-y-auto">
@@ -126,7 +126,7 @@ export default function EditProfile() {
                 <div className="flex items-center gap-4">
                   <label htmlFor="avatar-upload" className="relative group cursor-pointer">
                     <img
-                      src={avatarPreview || user.avatar}
+                      src={avatarPreview || user.avatar || '/images/default-avatar.png'}
                       alt="Avatar"
                       className="w-20 h-20 rounded-full border object-cover group-hover:opacity-80 transition"
                     />

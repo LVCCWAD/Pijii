@@ -33,11 +33,7 @@ export default function PijiHeader({ showBackButton = false }) {
 
         <Link className="profile" href="/profile">
           <img
-            src={
-              user?.avatar?.startsWith("avatars/")
-                ? `/storage/${user.avatar}`
-                : `/${user?.avatar || 'images/default-avatar.png'}`
-            }
+            src={user?.avatar || '/images/default-avatar.png'}
             alt="Profile"
             className="profile-pic"
           />

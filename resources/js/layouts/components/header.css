@@ -15,9 +15,6 @@
 }
 
 .search-input {
-  padding: 0 10px;
-  height: 3rem;
-  width: 29rem;
   border: 1px solid #e6eaee;
   background-color: rgb(158, 199, 171);
   border-radius: 0.375rem;

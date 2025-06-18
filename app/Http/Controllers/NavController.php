@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Inertia\Inertia;
 use App\Models\Project;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -75,8 +76,41 @@ class NavController extends Controller
         return Inertia::render('Landing');
     }
 
-    public function search()
+    public function search(Request $request)
     {
-        return inertia('Search');
+        $search = $request->input('search', '');
+        $userId = Auth::id();
+
+        $categories = [];
+        $projects = [];
+        $tasks = [];
+
+        if ($search !== '') {
+            $categories = Category::where('name', 'like', "%{$search}%")->get();
+
+            $projects = Project::where('created_by', $userId)
+                ->where(function ($query) use ($search) {
+                    $query->where('project_name', 'like', "%{$search}%");
+                })
+                ->with(['category', 'stage'])
+                ->get();
+
+           $tasks = Task::whereHas('project', function ($query) use ($userId) {
+                $query->where('created_by', $userId);
+            })
+            ->where(function ($query) use ($search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('body', 'like', "%{$search}%");
+            })
+            ->with(['stage', 'project'])
+            ->get();
+        }
+
+        return inertia('Search', [
+            'search' => $search,
+            'categories' => $categories,
+            'projects' => $projects,
+            'tasks' => $tasks,
+        ]);
     }
 }

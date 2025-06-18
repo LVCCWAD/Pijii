@@ -6,16 +6,14 @@ import PijiHeader from "../layouts/components/Header.jsx";
 import PijiHeader2 from "../layouts/components/Header2.jsx";
 import ProjectCard from "../layouts/components/Project_Card.jsx";
 import {
-  IconCalendarPlus,
+  IconCalendar,
   IconFlag,
   IconMessageCircleQuestion,
-  IconUsers,
   IconBell,
   IconCategory,
   IconPlus,
   IconX,
   IconInfoCircle,
-  IconCalendar
 } from "@tabler/icons-react";
 
 function timeAgo(dateString) {
@@ -35,7 +33,6 @@ export default function Dashboard() {
   const [showFlash, setShowFlash] = useState(!!flash?.success);
   const form = useForm({ name: "" });
 
-  // Flash success fadeout
   useEffect(() => {
     if (flash?.success) {
       setShowFlash(true);
@@ -43,13 +40,6 @@ export default function Dashboard() {
       return () => clearTimeout(timer);
     }
   }, [flash?.success]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      router.reload({ only: ['notifications'] });
-    }, 5000); 
-    return () => clearInterval(interval);
-  }, []);
 
   function submit(e) {
     e.preventDefault();
@@ -71,8 +61,8 @@ export default function Dashboard() {
         {/* Greeting + Notifications */}
         <div className="flex flex-col lg:flex-row gap-4 px-4 py-4">
           {/* Greeting Card */}
-          <div className="relative flex flex-col lg:flex-row bg-white flex-1 rounded-3xl drop-shadow-md px-6 py-4 min-h-[250px] overflow-visible">
-            <div className="flex flex-col justify-start gap-5 z-10 lg:pr-[330px]">
+          <div className="relative flex flex-col bg-white w-full lg:w-[60%] rounded-3xl drop-shadow-md px-6 py-4 min-h-[250px] overflow-visible">
+            <div className="flex flex-col justify-start gap-5 z-10 pr-0 sm:pr-[60px] md:pr-[80px] lg:pr-[140px] xl:pr-[160px] 2xl:pr-[180px]">
               <div>
                 <h1 className="text-3xl font-extrabold">Hi, {user.name}</h1>
                 <p className="text-2xl font-semibold">
@@ -107,7 +97,7 @@ export default function Dashboard() {
           </div>
 
           {/* Notifications */}
-          <div className="flex flex-col lg:max-w-[340px] w-full rounded-3xl drop-shadow-md bg-white px-5 py-4 min-h-[270px] shrink-0">
+          <div className="flex flex-col w-full lg:w-[40%] min-w-0 rounded-3xl drop-shadow-md bg-white px-5 py-4 min-h-[270px] shrink-0">
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-2">
                 <IconBell size={28} />
@@ -124,9 +114,8 @@ export default function Dashboard() {
             {notifications.length > 0 ? (
               <div className="mt-4 flex flex-col gap-2">
                 {notifications.map((notif) => (
-                  <Link
+                  <div
                     key={notif.id}
-                    href="/notifications"
                     className="bg-blue-100 w-full flex items-center justify-between rounded-2xl drop-shadow px-4 py-2 hover:bg-blue-200 transition"
                   >
                     <div className="flex flex-col w-full overflow-hidden">
@@ -138,16 +127,15 @@ export default function Dashboard() {
                       </span>
                     </div>
                     <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        router.patch(`/notifications/${notif.id}/mark-read`);
-                      }}
+                      onClick={() =>
+                        router.patch(`/notifications/${notif.id}/mark-read`)
+                      }
                       className="ml-2 text-gray-500 hover:text-red-600 transition shrink-0"
                       title="Mark as read"
                     >
                       <IconX size={16} stroke={2} />
                     </button>
-                  </Link>
+                  </div>
                 ))}
               </div>
             ) : (

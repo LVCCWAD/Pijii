@@ -49,7 +49,7 @@ export default function PijiHeader({ showBackButton = false }) {
 
         <Link className="profile" href="/profile">
           <img
-            src={user?.avatar|| 'https://i.pravatar.cc/40'} 
+            src={user?.avatar} 
             alt="Profile"
             className="profile-pic"
           />

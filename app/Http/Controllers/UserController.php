@@ -13,14 +13,14 @@ class UserController extends Controller
 {
      public function show()
     {
-        return view('user.show', [
+        return inertia('Profile', [
             'user' => Auth::user(),
         ]);
     }
 
     public function edit()
     {
-        return view('user.edit', [
+        return inertia('Edit/Profile', [
             'user' => Auth::user(),
         ]);
     }

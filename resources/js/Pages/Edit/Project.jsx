@@ -133,7 +133,7 @@ export default function EditProjectForm({
         <div>
           <label className="block text-sm font-medium text-gray-700">Scheduled Date</label>
           <input
-            type="date"
+            type="datetime-local"
             name="scheduled_at"
             value={data.scheduled_at}
             onChange={handleChange}

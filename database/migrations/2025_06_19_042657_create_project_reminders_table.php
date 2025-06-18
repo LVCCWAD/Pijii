@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('project_reminders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('task_id')->nullable()->constrained('tasks')->onDelete('cascade');
-            $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('cascade');
-            $table->text('message');
-            $table->boolean('is_read')->default(false);
-            $table->timestamp('notified_at')->nullable(); 
+            $table->integer('minutes_before');
+            $table->timestamp('remind_at'); 
+            $table->timestamp('notified_at')->nullable()->default(null); 
             $table->timestamps();
-        });        
+        });
     }
 
     /**
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('project_reminders');
     }
 };

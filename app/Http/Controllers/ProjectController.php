@@ -9,7 +9,7 @@ use Inertia\Inertia;
 use App\Models\Stage;
 use App\Models\Project;
 use App\Models\Category;
-use App\Models\TaskReminder;
+use App\Models\ProjectReminder;
 use Illuminate\Http\Request;
 use App\Events\EntityActionOccurred;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +56,18 @@ class ProjectController extends Controller
        
         $project = Project::create($validated);
 
+        if (!empty($validated['scheduled_at'])) 
+        {
+            $scheduledAt = Carbon::parse($validated['scheduled_at']);
+            $remindAt = $scheduledAt->copy()->subMinutes(60);
+
+            ProjectReminder::create([
+                'project_id' => $project->id,
+                'user_id' => Auth::id(),
+                'minutes_before' => 60,
+                'remind_at' => $remindAt,
+            ]);
+        }
 
         EntityActionOccurred::dispatch(
             Auth::id(),
@@ -264,28 +276,28 @@ class ProjectController extends Controller
         return redirect()->back()->with('success', value: 'Project deleted successfully.');
     }
 
-
     public function restore($categoryId, $projectId)
     {
-        $project = Project::withTrashed()->with('children')->where('category_id', $categoryId)->findOrFail($projectId);
-
+        $project = Project::withTrashed()
+            ->where('category_id', $categoryId)
+            ->findOrFail($projectId);
 
         abort_unless($project->created_by === Auth::id(), 403);
 
-
         $restoreTree = function ($proj) use (&$restoreTree) {
-            $proj->restore(); 
-            $proj->tasks()->withTrashed()->restore(); 
+            $proj->restore();
 
 
-            foreach ($proj->children()->withTrashed()->get() as $child) {
+            $children = Project::withTrashed()
+                ->where('parent_id', $proj->id)
+                ->get();
+
+            foreach ($children as $child) {
                 $restoreTree($child);
             }
         };
 
-
         $restoreTree($project);
-
 
         EntityActionOccurred::dispatch(
             Auth::id(),
@@ -294,9 +306,9 @@ class ProjectController extends Controller
             'restored'
         );
 
-
-        return redirect()->route('categories.show', $project->category_id)
-            ->with('success', 'Project and all subprojects/tasks restored.');
+        return redirect()
+            ->route('categories.show', $project->category_id)
+            ->with('success', 'Project and all subprojects restored.');
     }
 }
 

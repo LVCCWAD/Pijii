@@ -10,6 +10,7 @@ class Notification extends Model
     protected $fillable = [
         'user_id',
         'task_id',
+        'project_id',
         'message',
         'is_read',
         'notified_at',
@@ -25,5 +26,15 @@ class Notification extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
     }
 }

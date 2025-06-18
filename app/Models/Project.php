@@ -68,4 +68,10 @@ class Project extends Model
     {
         return $this->morphMany(Log::class, 'entity');
     }
+
+    
+    public function projectReminders(): HasMany
+    {
+        return $this->hasMany(ProjectReminder::class);
+    }
 }

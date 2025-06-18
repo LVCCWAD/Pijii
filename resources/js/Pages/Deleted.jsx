@@ -1,7 +1,7 @@
 import { NavbarMinimalColored } from "../layouts/mantine/sidebar.jsx";
 import PijiHeader from "../layouts/components/Header.jsx";
 import PijiHeader2 from "../layouts/components/Header2.jsx";
-import { IconFlag, IconTrash } from "@tabler/icons-react";
+import { IconFlag, IconTrash, IconHistory } from "@tabler/icons-react";
 import { Link, usePage, router } from "@inertiajs/react";
 import { Tooltip } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -12,9 +12,7 @@ export default function Deleted() {
 
   useEffect(() => {
     if (successMessage) {
-      const timer = setTimeout(() => {
-        setSuccessMessage("");
-      }, 3000);
+      const timer = setTimeout(() => setSuccessMessage(""), 3000);
       return () => clearTimeout(timer);
     }
   }, [successMessage]);
@@ -54,9 +52,7 @@ export default function Deleted() {
 
   const groupedProjects = deletedProjects.reduce((groups, project) => {
     const categoryName = project.category?.name || "Uncategorized";
-    if (!groups[categoryName]) {
-      groups[categoryName] = [];
-    }
+    if (!groups[categoryName]) groups[categoryName] = [];
     groups[categoryName].push(project);
     return groups;
   }, {});
@@ -64,34 +60,37 @@ export default function Deleted() {
   const handleDelete = (categoryId, projectId, projectName) => {
     if (
       confirm(
-        `Are you sure you want to permanently delete "${projectName}"? This will delete all its subprojects and tasks. This action cannot be undone.`
+        `Are you sure you want to permanently delete "${projectName}"?\nThis will delete all its subprojects and tasks. This action cannot be undone.`
       )
     ) {
       router.delete(`/categories/${categoryId}/projects/${projectId}`, {
         preserveScroll: true,
         onSuccess: () => {
-          router.reload({
-            only: ["projects", "flash"],
-            onSuccess: () => {
-              console.log(`Permanently deleted "${projectName}" successfully`);
-            },
-          });
+          router.reload({ only: ["projects", "flash"] });
         },
       });
     }
+  };
+
+  const handleRestore = (categoryId, projectId) => {
+    router.patch(`/categories/${categoryId}/projects/${projectId}/restore`, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setSuccessMessage("Project restored successfully.");
+        router.reload({ only: ["projects", "flash"] });
+      },
+    });
   };
 
   return (
     <div className="piji-green h-screen">
       <div className="flex flex-row w-full h-screen">
         <NavbarMinimalColored />
-
         <div className="flex flex-col w-full overflow-y-auto">
           <PijiHeader />
           <PijiHeader2 title="Recently Deleted" />
 
           <div className="p-4 md:p-6 xl:p-8">
-            {/* SUCCESS FLASH MESSAGE */}
             {successMessage && (
               <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
                 {successMessage}
@@ -117,17 +116,32 @@ export default function Deleted() {
                           key={project.id}
                           className="relative w-full md:w-72 bg-amber-50 rounded-lg shadow-sm transition-all duration-200 hover:bg-amber-100 hover:scale-[1.02] active:scale-95 active:bg-amber-200 p-3 no-underline text-black"
                         >
-                          {/* TRASH BUTTON */}
-                          <div
-                            className="absolute top-2 right-2 z-10"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleDelete(project.category_id, project.id, project.project_name || "Untitled");
-                            }}
-                          >
+                          {/* ACTION BUTTONS */}
+                          <div className="absolute top-2 right-2 z-10 flex space-x-2">
+                            {/* Restore button */}
+                            <Tooltip label="Restore project" position="bottom" withArrow>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleRestore(project.category_id, project.id);
+                                }}
+                                className="p-1 rounded hover:bg-green-100"
+                              >
+                                <IconHistory size={16} className="text-green-600" />
+                              </button>
+                            </Tooltip>
+
+                            {/* Permanent delete button */}
                             <Tooltip label="Permanently delete project" position="bottom" withArrow>
-                              <button className="p-1 rounded hover:bg-red-100">
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleDelete(project.category_id, project.id, project.project_name || "Untitled");
+                                }}
+                                className="p-1 rounded hover:bg-red-100"
+                              >
                                 <IconTrash size={16} className="text-red-600" />
                               </button>
                             </Tooltip>

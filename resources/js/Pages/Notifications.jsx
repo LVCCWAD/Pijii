@@ -8,11 +8,9 @@ export default function Notifications() {
   const { notifications: initialNotifications, flash } = usePage().props;
   const [notifications, setNotifications] = useState(initialNotifications);
 
-  // Polling to refresh notifications every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       router.reload({ only: ["notifications"], preserveState: true }).then(() => {
-        // Update notifications after reload
         setNotifications(usePage().props.notifications || []);
       });
     }, 5000);
@@ -26,13 +24,25 @@ export default function Notifications() {
       : `/notifications/${notificationId}/mark-read`;
 
     router.patch(url).then(() => {
-      // Optimistically update UI
       setNotifications((prev) =>
         prev.map((notif) =>
           notif.id === notificationId ? { ...notif, is_read: !isRead } : notif
         )
       );
     });
+  };
+
+  const handleNavigate = (notification) => {
+    if (notification.task) {
+      const task = notification.task;
+      const project = task.project;
+      const category = project.category;
+      router.visit(`/categories/${category.id}/projects/${project.id}/tasks/${task.id}`);
+    } else if (notification.project) {
+      const project = notification.project;
+      const category = project.category;
+      router.visit(`/categories/${category.id}/projects/${project.id}`);
+    }
   };
 
   const formatDateTime = (datetime) => {
@@ -74,11 +84,12 @@ export default function Notifications() {
                 {notifications.map((notification) => (
                   <li
                     key={notification.id}
-                    className={`flex justify-between items-center p-4 border rounded-lg shadow-sm transition ${
+                    onClick={() => handleNavigate(notification)}
+                    className={`cursor-pointer flex justify-between items-center p-4 border rounded-lg shadow-sm transform transition-all duration-200 ${
                       notification.is_read
                         ? "bg-gray-50 opacity-30 grayscale"
                         : "bg-white"
-                    } hover:bg-gray-100`}
+                    } hover:bg-yellow-100 hover:scale-[1.02]`}
                   >
                     <div className="flex-1 pr-4">
                       <p className="text-sm text-gray-400 mb-1">
@@ -105,7 +116,10 @@ export default function Notifications() {
 
                     <div className="flex-shrink-0">
                       <button
-                        onClick={() => handleMark(notification.id, notification.is_read)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // prevent navigation
+                          handleMark(notification.id, notification.is_read);
+                        }}
                         className={`px-3 py-1 rounded border ${
                           notification.is_read
                             ? "border-yellow-400 text-yellow-600 hover:bg-yellow-50"

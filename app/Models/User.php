@@ -73,6 +73,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(TaskReminder::class);
     }
 
+    public function projectReminders(): HasMany
+    {
+        return $this->hasMany(ProjectReminder::class);
+    }
+
     public function logs(): HasMany
     {
         return $this->hasMany(Log::class);

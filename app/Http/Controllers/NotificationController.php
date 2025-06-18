@@ -9,12 +9,17 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::where('user_id', Auth::id())
-            ->orderByDesc('created_at')
-            ->get();
+        $notifications = Notification::with([
+            'task.project.category:id,name',
+            'project.category:id,name'
+        ])
+        ->where('user_id', Auth::id())
+        ->orderByDesc('created_at')
+        ->get();
 
         return inertia('Notifications', compact('notifications'));
     }
+
 
     public function markRead(Notification $notification)
     {

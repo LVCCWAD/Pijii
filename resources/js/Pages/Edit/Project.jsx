@@ -22,7 +22,9 @@ export default function EditProjectForm({
     stage_id: project.stage_id || "",
     parent_id: project.parent_id || null,
     priority_level: project.priority_level || "medium",
-    scheduled_at: project.scheduled_at ? project.scheduled_at.slice(0, 10) : "", // format YYYY-MM-DD
+    scheduled_at: project.scheduled_at
+      ? new Date(project.scheduled_at).toISOString().slice(0, 16)
+      : "",
   });
 
   const handleChange = (e) => {
@@ -33,7 +35,6 @@ export default function EditProjectForm({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate category_id from form data, not from prop
     if (!data.category_id || !data.stage_id) {
       setSubmitError("Please select a category and a stage.");
       return;
@@ -53,7 +54,6 @@ export default function EditProjectForm({
   return (
     <div className="max-w-3xl mx-auto p-4">
       <form onSubmit={handleSubmit} className="space-y-3">
-
         {submitError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
             <strong className="font-semibold">Error:</strong> {submitError}

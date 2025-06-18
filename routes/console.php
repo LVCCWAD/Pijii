@@ -83,24 +83,31 @@ Schedule::call(function () {
         ));
     }
 
-    $overdueTasks = Task::whereHas('stage', fn($q) =>
-        $q->where('name', '!=', 'completed')
+    // ⚠️ Overdue Project Notifications
+    $overdueProjects = Project::whereHas('stage', fn($q) =>
+        $q->whereNotIn('name', ['completed', 'on hold'])
     )
     ->whereNotNull('scheduled_at')
     ->whereNull('deleted_at')
     ->whereNull('archived_at')
-    ->whereNull('notified_at')
-    ->where('scheduled_at', '<', $now)
+    ->where('scheduled_at', '<=', $now)
     ->get();
 
-    foreach ($overdueTasks as $task) {
-        Notification::firstOrCreate([
-            'user_id' => $task->created_by,
-            'task_id' => $task->id,
-            'message' => '⚠️ Task "' . $task->title . '" is overdue (was scheduled at ' . Carbon::parse($task->scheduled_at)->format('M j, Y g:i A') . ')',
-            'is_read' => false,
-            'notified_at' => now(),
-        ]);
+    foreach ($overdueProjects as $project) {
+        $alreadyNotified = Notification::where('project_id', $project->id)
+            ->where('user_id', $project->created_by)
+            ->where('message', 'like', '⚠️ Project "%')
+            ->exists();
+
+        if (!$alreadyNotified) {
+            Notification::create([
+                'user_id' => $project->created_by,
+                'project_id' => $project->id,
+                'message' => '⚠️ Project "' . $project->project_name . '" is overdue (was scheduled at ' . Carbon::parse($project->scheduled_at)->format('M j, Y g:i A') . ')',
+                'is_read' => false,
+                'notified_at' => now(),
+            ]);
+        }
     }
 })->everyMinute();
 

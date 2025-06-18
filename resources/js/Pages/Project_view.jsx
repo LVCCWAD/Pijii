@@ -22,6 +22,21 @@ import CreateProjectForm from "../Pages/Create/Project.jsx";
 import EditProjectForm from "../Pages/Edit/Project.jsx";
 import CreateTaskForm from "../Pages/Create/Task.jsx";
 
+function getStageLabel(stageName) {
+  switch (stageName) {
+    case "to_do":
+      return "To Do";
+    case "in_progress":
+      return "In Progress";
+    case "completed":
+      return "Completed";
+    case "on_hold":
+      return "On Hold";
+    default:
+      return "Unknown";
+  }
+}
+
 function getPriorityStyle(priority) {
   switch (priority) {
     case "low":
@@ -84,8 +99,16 @@ export default function ProjectView() {
         <NavbarMinimalColored />
         <div className="flex flex-col w-full h-full overflow-hidden">
           <PijiHeader />
-          <PijiHeader2 title={`Project: ${project?.project_name || "Untitled"}`} />
-
+          <PijiHeader2
+            title={
+              <span>
+                Project: <span className="font-bold">{project?.project_name || "Untitled"}</span>{" "}
+                <span className="text-sm text-gray-500 font-normal">
+                  ({getStageLabel(project.stage?.stage_name)})
+                </span>
+              </span>
+            }
+          />
           <div className="flex-1 overflow-y-auto p-4">
             {flash?.success && showSuccess && (
               <div className="mb-4 mx-4 p-3 rounded-lg bg-green-100 text-green-800 border border-green-300 shadow-sm transition-opacity duration-500">
@@ -107,12 +130,13 @@ export default function ProjectView() {
                     <IconChevronCompactRight size={20} />
                   </div>
                 ))}
-                <h1 className="text-3xl font-bold">{project.project_name}</h1>
+                <h1 className="text-3xl font-bold">{project.project_name}</h1>              
                 <Tooltip label="Edit project">
                   <button onClick={() => setOpenedEditProjectModal(true)} className="cursor-pointer" aria-label="Edit Project">
                     <IconEdit className="hover:text-amber-600 transition-colors duration-200" />
                   </button>
                 </Tooltip>
+                
               </div>
             </div>
 

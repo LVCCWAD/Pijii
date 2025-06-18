@@ -1,0 +1,122 @@
+# 📌 Pijii – Personal Task Manager
+
+**Pijii** is a full-stack web-based task manager that helps users organize tasks, manage priorities, and schedule deadlines efficiently. Built using Laravel and React via Inertia.js, it offers a smooth, responsive user experience with modern UI components and powerful task/project organization features.
+
+---
+
+## ⚙️ Technologies Used
+
+### 🖥 Backend
+- **Laravel 12** – PHP web framework for routing, controllers, and APIs
+- **SQLite** – Lightweight database for local development
+
+### 💻 Frontend
+- **React 19** – Interactive UI with component-based design
+- **Inertia.js** – Bridges Laravel backend and React frontend as a single-page app
+- **Tailwind CSS 4** – Utility-first CSS framework
+- **Mantine UI 8** – Beautiful, accessible React component library
+- **Vite 6** – Fast build tool and dev server
+
+### 🚀 Deployment
+- **Railway** – Hosting and deployment platform for full-stack apps
+Here is the link to our app: https://pijii-production.up.railway.app/
+---
+
+## 🔑 Features
+
+- ✅ Task creation, editing, deletion
+- 🗂 Project grouping and hierarchy (parent-subproject)
+- 🏷 Category grouping for projects
+- 📅 Scheduling with deadlines and reminders
+- ⚠️ Priority flag indicators
+- 🖱️ Drag-and-drop interface using pure Tailwind CSS
+- 🧠 Search functionality
+- 📤 Archive and restore projects/tasks
+- 👤 Auth with user profile editing and account deletion
+
+---
+
+## 🛠 Installation Guide
+
+### 1. Required Software
+
+> Install these before proceeding:
+- [PHP 8.2+](https://windows.php.net/download/)
+- [Composer](https://getcomposer.org/)
+- [Node.js 18+](https://nodejs.org/)
+- [Git](https://git-scm.com/)
+- [VS Code](https://code.visualstudio.com/)
+
+---
+
+### 2. Setup PHP on Windows (if needed)
+
+- Extract downloaded PHP zip
+- Copy its path and add to System Environment Variables → Path
+- Create or edit `php.ini` in the PHP folder: Then **uncomment** these lines (remove `;` at the beginning):
+
+
+  ```ini
+  extension=zip
+  extension=fileinfo
+  extension=openssl
+  extension=pdo_sqlite
+  extension=sqlite3
+
+
+### 3. Clone and Setup Project
+
+# Clone the repository
+git clone https://github.com/your-username/pijii.git
+cd pijii
+
+# Install PHP dependencies
+composer install
+
+# Install JavaScript dependencies
+npm install
+
+# Copy and setup .env
+cp .env.example .env
+php artisan key:generate
+
+# Run migrations
+php artisan migrate
+
+# Storage link
+php artisan storage:link
+
+RUN APP LOCALLY
+
+# Start development server
+php artisan serve
+
+# In another terminal tab
+npm run dev
+
+# In a third tab, start task scheduling (for reminders)
+php artisan schedule:work
+
+📦 NPM Dependencies (package.json highlights)
+
+"dependencies": {
+  "@inertiajs/react": "^2.0.8",
+  "@mantine/core": "^8.0.2",
+  "@mantine/notifications": "^8.0.2",
+  "@mantine/modals": "^8.0.2",
+  "@mantine/hooks": "^8.0.2",
+  "@mantine/carousel": "^8.0.2",
+  "@tabler/icons-react": "^3.33.0",
+  "react": "^19.1.0",
+  "react-dom": "^19.1.0",
+  "tailwindcss": "^4.1.7",
+  "vite": "^6.3.3"
+}
+
+🔍 VS Code Extensions (Recommended)
+✅ PHP Intelephense
+✅ Laravel Blade Snippets
+✅ PHP Debug
+✅ Tailwind CSS IntelliSense
+✅ React JS Snippets
+✅ PostCSS Language Support ← (for Tailwind/PostCSS autocomplete and highlighting)

@@ -46,7 +46,7 @@ class TaskController extends Controller
 
     public function create(Category $category, Project $project)
     {
-        abort_unless($project->created_by === Auth::id(), 403);
+        abort_unless($project->created_by === Auth::id(),   403);
       
         $stages = Stage::all();
         $users = User::all();
@@ -56,7 +56,7 @@ class TaskController extends Controller
 
     public function store(Request $request, Category $category, Project $project)
     {
-        abort_unless($category->created_by === Auth::id(), 403);
+        abort_unless($project->created_by === Auth::id(), 403);
 
 
         $validated = $request->validate([

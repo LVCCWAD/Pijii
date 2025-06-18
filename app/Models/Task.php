@@ -53,4 +53,8 @@ class Task extends Model
         return $this->morphMany(Log::class, 'entity');
     }
     
+    public function taskReminders(): HasMany
+    {
+        return $this->hasMany(TaskReminder::class);
+    }
 }

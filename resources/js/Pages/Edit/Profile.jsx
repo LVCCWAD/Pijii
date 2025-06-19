@@ -8,6 +8,7 @@ import { IconArrowBack, IconDeviceFloppy } from "@tabler/icons-react";
 
 export default function EditProfile() {
   const { user, flash } = usePage().props;
+  const initialAvatar = user.avatar; // ✅ cache to prevent losing it on form reload
   const fileInputRef = useRef();
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [localErrors, setLocalErrors] = useState({});
@@ -51,8 +52,6 @@ export default function EditProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Reset local error
     setLocalErrors({});
 
     if (data.password && data.password !== data.password_confirmation) {
@@ -73,9 +72,8 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="flex h-screen piji-green   overflow-hidden">
+    <div className="flex h-screen piji-green overflow-hidden">
       <NavbarMinimalColored />
-
       <div className="flex flex-col flex-1 overflow-y-auto">
         <PijiHeader />
         <PijiHeader2 title="Edit Profile" />
@@ -126,7 +124,11 @@ export default function EditProfile() {
                 <div className="flex items-center gap-4">
                   <label htmlFor="avatar-upload" className="relative group cursor-pointer">
                     <img
-                      src={avatarPreview || user.avatar || '/images/default-avatar.png'}
+                      src={
+                        avatarPreview ??
+                        initialAvatar ??
+                        `${window.location.origin}/images/default-avatar.png`
+                      }
                       alt="Avatar"
                       className="w-20 h-20 rounded-full border object-cover group-hover:opacity-80 transition"
                     />
@@ -168,7 +170,9 @@ export default function EditProfile() {
 
               {/* Confirm Password */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm New Password
+                </label>
                 <input
                   type="password"
                   className={`w-full border px-3 py-2 rounded ${

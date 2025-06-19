@@ -81,6 +81,13 @@ export default function TaskEdit() {
     { value: "4320", label: "3 days before" },
   ];
 
+    function formatLocalDateTime(datetime) {
+    if (!datetime) return "";
+    const local = new Date(datetime);
+    local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+    return local.toISOString().slice(0, 16);
+  }
+
   return (
     <div className="piji-green h-screen overflow-hidden">
       <div className="flex flex-row h-full w-full">
@@ -166,7 +173,7 @@ export default function TaskEdit() {
                 <input
                   type="datetime-local"
                   className="w-full p-2 border rounded-lg"
-                  value={scheduledAt ? new Date(scheduledAt).toISOString().slice(0, 16) : ""}
+                  value={formatLocalDateTime(scheduledAt)}
                   onChange={(e) => setScheduledAt(e.target.value)}
                 />
               </div>

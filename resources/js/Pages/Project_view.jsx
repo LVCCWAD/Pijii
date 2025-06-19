@@ -173,10 +173,13 @@ export default function ProjectView() {
                     const completedTasks = sub.tasks?.filter((t) => t.status === "completed").length || 0;
                     const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
                     const scheduledDate = sub.scheduled_at
-                      ? new Date(sub.scheduled_at).toLocaleDateString(undefined, {
+                      ? new Date(sub.scheduled_at).toLocaleString(undefined, {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true,
                         })
                       : "No date";
 
@@ -290,7 +293,7 @@ export default function ProjectView() {
                               <p className="text-xs text-gray-600 truncate">{task.description}</p>
                             )}
                             <div className="flex justify-between items-center text-xs text-gray-500 mt-1">
-                              <span>📅 {task.scheduled_at ? new Date(task.scheduled_at).toLocaleDateString() : "No date"}</span>
+                              <span>📅 {task.scheduled_at ? new Date(task.scheduled_at).toLocaleString() : "No date"}</span>
                               <div className="flex items-center gap-1">
                                 <Tooltip label={label}>
                                   <div className={`w-5 h-5 rounded-full flex items-center justify-center ${color}`}>

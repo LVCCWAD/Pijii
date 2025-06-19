@@ -22,9 +22,7 @@ export default function EditProjectForm({
     stage_id: project.stage_id || "",
     parent_id: project.parent_id || null,
     priority_level: project.priority_level || "medium",
-    scheduled_at: project.scheduled_at
-      ? new Date(project.scheduled_at).toISOString().slice(0, 16)
-      : "",
+    scheduled_at: formatLocalDateTime(project.scheduled_at),
   });
 
   const handleChange = (e) => {
@@ -50,6 +48,14 @@ export default function EditProjectForm({
       },
     });
   };
+
+  function formatLocalDateTime(datetime) {
+    if (!datetime) return "";
+    const local = new Date(datetime);
+    local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+    return local.toISOString().slice(0, 16);
+  }
+
 
   return (
     <div className="max-w-3xl mx-auto p-4">

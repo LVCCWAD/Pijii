@@ -42,7 +42,7 @@ class NotificationController extends Controller
             'notified_at' => null,
         ]);
 
-        return redirect()->route('notifications.index')->with('status', value: 'Notification marked as unread.');
+        return redirect()->route('notifications.index')->with('status', 'Notification marked as unread.');
     }
 
     protected function authorizeAccess(Notification $notification)

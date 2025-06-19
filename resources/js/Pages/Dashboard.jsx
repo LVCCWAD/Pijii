@@ -72,12 +72,12 @@ export default function Dashboard() {
               
               <div className="grid grid-cols-2 gap-y-2 w-[300px] sm:w-[400px]">
 
-                <Link className="flex items-center gap-1" href="/Pijii-App">
-                  <IconInfoCircle size={24} color="green" />
+                <Link className="flex items-center gap-1 hover:underline hover:text-blue-700 transition" href="/Pijii-App">
+                  <IconInfoCircle size={24} color="blue" />
                   About Pijii
                 </Link>
               
-                <Link className="flex items-center gap-1 mt-2" href="/urgent">
+                <Link className="flex items-center gap-1 mt-2 hover:underline hover:text-orange-700 transition" href="/urgent">
                   <IconFlag size={24} color="darkorange" />
                   Urgent Tasks
                 </Link>
@@ -109,9 +109,9 @@ export default function Dashboard() {
               </div>
               <Link
                 href="/notifications"
-                className="text-xs pb-1 text-black hover:text-blue-600 transition"
+                className="text-sm font-medium p-1 rounded hover:bg-gray-100 hover:text-orange-700 transition"
               >
-                See more...
+                See all...
               </Link>
             </div>
 
@@ -120,7 +120,11 @@ export default function Dashboard() {
                 {notifications.map((notif) => (
                   <div
                     key={notif.id}
-                    className="bg-blue-100 w-full flex items-center justify-between rounded-2xl drop-shadow px-4 py-2 hover:bg-blue-200 transition"
+                    className="bg-blue-100 w-full flex items-center justify-between rounded-2xl drop-shadow px-4 py-2 hover:bg-blue-200 transition cursor-pointer"
+                    onClick={() => {
+                      router.visit(`/notifications?highlight=${notif.id}`);
+                    }}                    
+                    title={notif.message}
                   >
                     <div className="flex flex-col w-full overflow-hidden">
                       <span className="font-medium truncate text-gray-800">
@@ -130,15 +134,16 @@ export default function Dashboard() {
                         {timeAgo(notif.created_at)}
                       </span>
                     </div>
-                    <button
-                      onClick={() =>
-                        router.patch(`/notifications/${notif.id}/mark-read`)
-                      }
-                      className="ml-2 text-gray-500 hover:text-red-600 transition shrink-0"
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        router.patch(`/notifications/${notif.id}/mark-read`);
+                      }}
+                      className="ml-2 p-1 rounded-full hover:bg-red-100 cursor-pointer"
                       title="Mark as read"
                     >
-                      <IconX size={16} stroke={2} />
-                    </button>
+                      <IconX size={20} stroke={2.2} className="text-gray-500 hover:text-red-600 transition" />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -157,7 +162,7 @@ export default function Dashboard() {
             </div>
             <button
               onClick={() => setShowCreateForm(!showCreateForm)}
-              className="text-white bg-green-600 hover:bg-green-700 transition px-3 py-2 rounded-full flex items-center gap-1"
+              className="text-white cursor-pointer bg-green-600 hover:bg-green-700 transition px-3 py-2 rounded-full flex items-center gap-1"
             >
               <IconPlus size={20} />
               Add Category
@@ -188,7 +193,7 @@ export default function Dashboard() {
               <button
                 type="submit"
                 disabled={form.processing}
-                className="bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+                className="bg-green-600 cursor-pointer text-white py-3 px-6 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
               >
                 Create
               </button>

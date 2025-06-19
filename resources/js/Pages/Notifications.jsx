@@ -5,30 +5,47 @@ import PijiHeader2 from "../layouts/components/Header2.jsx";
 import { usePage, router } from "@inertiajs/react";
 
 export default function Notifications() {
-  const { notifications: initialNotifications, flash } = usePage().props;
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const { notifications: pageNotifications, flash } = usePage().props;
+  const [notifications, setNotifications] = useState(pageNotifications);
+  const [highlightId, setHighlightId] = useState(
+    new URLSearchParams(window.location.search).get("highlight")
+  );
 
+  // Sync local state with page props
+  useEffect(() => {
+    setNotifications(pageNotifications);
+  }, [pageNotifications]);
+
+  // Poll every 1.5 seconds for updates
   useEffect(() => {
     const interval = setInterval(() => {
-      router.reload({ only: ["notifications"], preserveState: true }).then(() => {
-        setNotifications(usePage().props.notifications || []);
-      });
-    }, 5000);
-
+      router.reload({ only: ["notifications"], preserveState: true });
+    }, 1500);
     return () => clearInterval(interval);
   }, []);
+
+  // Remove highlight after 2.5 seconds
+  useEffect(() => {
+    if (highlightId) {
+      const timeout = setTimeout(() => setHighlightId(null), 2500);
+      return () => clearTimeout(timeout);
+    }
+  }, [highlightId]);
 
   const handleMark = (notificationId, isRead) => {
     const url = isRead
       ? `/notifications/${notificationId}/mark-unread`
       : `/notifications/${notificationId}/mark-read`;
 
-    router.patch(url).then(() => {
-      setNotifications((prev) =>
-        prev.map((notif) =>
-          notif.id === notificationId ? { ...notif, is_read: !isRead } : notif
-        )
-      );
+    router.patch(url, {
+      preserveState: true,
+      onSuccess: () => {
+        setNotifications((prev) =>
+          prev.map((notif) =>
+            notif.id === notificationId ? { ...notif, is_read: !isRead } : notif
+          )
+        );
+      },
     });
   };
 
@@ -61,7 +78,6 @@ export default function Notifications() {
     <div className="piji-green h-screen">
       <div className="flex flex-row w-full h-screen">
         <NavbarMinimalColored />
-
         <div className="flex flex-col w-full overflow-y-auto">
           <PijiHeader />
           <PijiHeader2 title="Notifications" />
@@ -89,7 +105,11 @@ export default function Notifications() {
                       notification.is_read
                         ? "bg-gray-50 opacity-30 grayscale"
                         : "bg-white"
-                    } hover:bg-yellow-100 hover:scale-[1.02]`}
+                    } hover:bg-yellow-100 ${
+                      notification.id.toString() === highlightId
+                        ? "border-2 border-yellow-600 bg-yellow-100"
+                        : ""
+                    }`}
                   >
                     <div className="flex-1 pr-4">
                       <p className="text-sm text-gray-400 mb-1">
@@ -106,6 +126,7 @@ export default function Notifications() {
                         className={`text-base ${
                           notification.is_read ? "text-gray-600" : "text-black"
                         }`}
+                        title={notification.message}
                       >
                         {notification.message}
                       </p>
@@ -117,13 +138,13 @@ export default function Notifications() {
                     <div className="flex-shrink-0">
                       <button
                         onClick={(e) => {
-                          e.stopPropagation(); // prevent navigation
+                          e.stopPropagation();
                           handleMark(notification.id, notification.is_read);
                         }}
-                        className={`px-3 py-1 rounded border ${
+                        className={`px-3 py-1 rounded border transform transition-all duration-200 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-offset-1 ${
                           notification.is_read
-                            ? "border-yellow-400 text-yellow-600 hover:bg-yellow-50"
-                            : "border-blue-400 text-blue-600 hover:bg-blue-50"
+                            ? "border-yellow-500 text-yellow-700 bg-yellow-100 hover:bg-yellow-200 font-semibold"
+                            : "border-blue-500 text-blue-700 bg-blue-100 hover:bg-blue-200 font-semibold"
                         }`}
                       >
                         {notification.is_read ? "Mark Unread" : "Mark Read"}
